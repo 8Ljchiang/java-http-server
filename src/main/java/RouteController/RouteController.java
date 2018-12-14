@@ -5,7 +5,7 @@ import Response.IResponse;
 
 import java.io.IOException;
 
-public class RouteController {
+public class RouteController implements IRouteController {
     public IRouteControllerLambda routeLambda;
     public RouteController(IRouteControllerLambda lambda) {
         this.routeLambda = lambda;
