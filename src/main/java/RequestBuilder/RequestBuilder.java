@@ -2,6 +2,7 @@ package RequestBuilder;
 
 import Request.Request;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class RequestBuilder {
@@ -50,18 +51,15 @@ public class RequestBuilder {
                 if (line != null && line.length() > 3 && !isDividerLine(line)) {
 
                     String[] entry = line.split(":");
-                    String key = entry[0];
+                    String key = entry[0].trim();
 
 
                     if (key.equals("host")) {
-                        String value = "";
-                        for (int i = 1; i < entry.length; i++) {
-                            value += entry[i];
-                        }
-                        headers.put(key, value);
+                        String value = (entry[1] + ":" + entry[2]);
+                        headers.put(key.trim(), value.trim());
                     } else {
                         String value = entry[1];
-                        headers.put(key, value);
+                        headers.put(key.trim(), value.trim());
                     }
                 }
 
@@ -97,13 +95,19 @@ public class RequestBuilder {
 
     public static Boolean isValidRequestString(String requestString) {
         String[] requestLines = requestStringToArray(requestString);
-
-
-        if (requestLines != null && requestLines.length > 0) {
+        if (requestLines != null && requestLines.length > 1) {
             String[] firstLineParts = requestLines[0].split(" ");
-            String type = firstLineParts[2].split("/")[0];
-            if (firstLineParts.length == 3 && type.equals("HTTP")) {
-                return true;
+
+            if (firstLineParts.length == 3) {
+                String method = firstLineParts[0];
+                String path = firstLineParts[1];
+                String type = firstLineParts[2].split("/")[0];
+
+                String[] validMethods = new String[] {"GET", "HEAD", "PUT", "POST", "OPTIONS", "DELETE"};
+
+                if (Arrays.asList(validMethods).contains(method) && path.length() > 0 && type.equals("HTTP")) {
+                    return true;
+                }
             }
         }
         return false;

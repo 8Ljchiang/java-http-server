@@ -6,29 +6,37 @@ import org.junit.Before;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 
 public class RequestBuilderTest {
 
     String method = "GET";
     String path = "/home";
     String type = "HTTP/1.1";
-    String headerString = "";
-    String body = "";
-    String requestString = "";
-    HashMap<String, String> headers = new HashMap<>();
+    String headerString = "Content-Type: text/plain\n"
+            + "host: localhost:9000\n";
+    String body = "hello world\n";
+    String requestString = method + " " + path + " " + type + "\n"
+            + headerString
+            + "\n" + body;
+    HashMap<String, String> headers;
 
     Request request;
 
     @Before
     public final void setup() {
+        headers = new HashMap<>();
+        headers.put("Content-Type", "text/plain");
+        headers.put("host", "localhost:9000");
         request = RequestBuilder.createRequest(requestString);
     }
 
     @Test
     public final void testCreateRequest() {
-        Request request = RequestBuilder.createRequest(requestString);
-
         assertNotNull(request);
         assertEquals(method, request.getMethod());
         assertEquals(path, request.getPath());
@@ -49,7 +57,7 @@ public class RequestBuilderTest {
     @Test
     public final void testGetFirstLine() {
         String[] requestStringArray = requestString.split("\n");
-        assertEquals(method + " " + path + " " + type + "\n", RequestBuilder.getFirstLine(requestStringArray));
+        assertEquals(method + " " + path + " " + type, RequestBuilder.getFirstLine(requestStringArray));
     }
 
     @Test
