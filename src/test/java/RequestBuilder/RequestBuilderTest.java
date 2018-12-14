@@ -1,16 +1,15 @@
 package RequestBuilder;
 
-import Request.Request;
 import org.junit.Test;
 import org.junit.Before;
-
-import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.HashMap;
+import Request.Request;
 
 public class RequestBuilderTest {
 
