@@ -36,7 +36,7 @@ public class RequestTest {
 
     @Test
     public final void testGetMethod() {
-        assertEquals(type, request.getMethod());
+        assertEquals(method, request.getMethod());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class RequestTest {
         for (HashMap.Entry<String, String> entry : headers.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            assertTrue(requestHeaders.containsKey(key);
+            assertTrue(requestHeaders.containsKey(key));
             assertEquals(value, requestHeaders.get(key));
         }
     }
@@ -79,6 +79,6 @@ public class RequestTest {
 
     @Test
     public final void testIsValid() {
-        
+
     }
 }
