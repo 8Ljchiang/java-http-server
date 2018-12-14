@@ -1,5 +1,8 @@
 package RouteController;
 
+import Request.IRequest;
+import Response.IResponse;
+
 import java.io.IOException;
 
 public interface IRouteControllerLambda {
