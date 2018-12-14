@@ -98,8 +98,6 @@ public class RouteControllerTest {
         routeController.handle(mockRequest, mockResponse);
 
         // 4. Assert that the lambda method was called once.
-
-        // assert statements
         assertEquals(true, methodCalls.contains(methodCallString));
     }
 }
