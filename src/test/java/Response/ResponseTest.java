@@ -1,10 +1,8 @@
 package Response;
 
-import SocketConnection.ISocketConnection;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
@@ -105,7 +103,7 @@ public class ResponseTest {
     }
 
     @Test
-    public final void testSetBody() throws NoSuchFieldException, IllegalAccessException{
+    public final void testSetBody() throws NoSuchFieldException, IllegalAccessException {
         String body = "{ \"response\" : \"Hello world\" }";
         response.setBody(body);
 
@@ -113,5 +111,22 @@ public class ResponseTest {
         final Field field = response.getClass().getDeclaredField("body");
         field.setAccessible(true);
         assertEquals("Fields didn't match", field.get(response), body);
+    }
+
+    @Test
+    public final void testGetBody() throws NoSuchFieldException, IllegalAccessException {
+        //given
+        String body = "{ \"response\" : \"Hello world\" }";
+
+        final Response finalizedResponse = response;
+        final Field field = finalizedResponse.getClass().getDeclaredField("body");
+        field.setAccessible(true);
+        field.set(finalizedResponse, body);
+
+        //when
+        final String result = finalizedResponse.getBody();
+
+        //then
+        assertEquals("field wasn't retrieved properly", result, body);
     }
 }
