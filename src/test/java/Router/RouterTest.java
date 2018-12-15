@@ -1,5 +1,6 @@
 package Router;
 
+import Methods.*;
 import Request.IRequest;
 import Response.IResponse;
 import Route.Route;
@@ -23,13 +24,18 @@ public class RouterTest {
 
     @Before
     public final void setup() {
-        Router router = new Router();
+        router = new Router();
     }
 
     @Test
-    public final void testGet() throws IllegalAccessException {
+    public final void testUse() throws IllegalAccessException {
+
+    }
+
+    @Test
+    public final void testGet() throws IllegalAccessException, NoSuchFieldException {
         String path = "/";
-        String expectedMethod = "GET";
+        String expectedMethod = Methods.GET.toString();
         int expectedNumOfPaths = 1;
         int expectedNumOfRoutes = 1;
 
@@ -38,13 +44,14 @@ public class RouterTest {
             return res;
         };
 
-        IRouteController defaultController = new RouteController(defaultControllerLambda);
+        RouteController defaultController = new RouteController(defaultControllerLambda);
         router.get(path, defaultController);
 
         // Get HashMap of Routes
 
         final Field field = router.getClass().getDeclaredField("routes");
-        HashMap<String, ArrayList<Route>> routerRoutes = (HashMap<String, ArrayList<Route>>)field.get(field);
+        field.setAccessible(true);
+        HashMap<String, ArrayList<Route>> routerRoutes = (HashMap<String, ArrayList<Route>>)field.get(router);
 
         // Check for proper number of keys.
         int numOfPaths = routerRoutes.size();
