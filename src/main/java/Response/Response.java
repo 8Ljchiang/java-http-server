@@ -1,5 +1,7 @@
 package Response;
 
+import SocketConnection.ISocketConnection;
+
 import java.util.HashMap;
 
 public class Response {

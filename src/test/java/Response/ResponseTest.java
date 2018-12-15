@@ -1,8 +1,10 @@
 package Response;
 
+import SocketConnection.ISocketConnection;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
@@ -13,6 +15,20 @@ public class ResponseTest {
 
     public class SocketConnectionMock implements ISocketConnection {
 
+        @Override
+        public String readInputData() throws IOException {
+            return null;
+        }
+
+        @Override
+        public void sendOutputData(String text) throws IOException {
+
+        }
+
+        @Override
+        public void closeSocketConnection() throws IOException {
+
+        }
     }
 
     private SocketConnectionMock socketConnection = new SocketConnectionMock();
@@ -24,7 +40,7 @@ public class ResponseTest {
     }
 
     @Test
-    public final void testSetStatus() {
+    public final void testSetStatus() throws NoSuchFieldException, IllegalAccessException {
         String notFoundStatus = "404 Not Found";
         response.setStatus(notFoundStatus);
 
@@ -35,10 +51,10 @@ public class ResponseTest {
     }
 
     @Test
-    public final void tesGetStatus() {
+    public final void tesGetStatus() throws NoSuchFieldException, IllegalAccessException {
         //given
         String notFoundStatus = "404 Not Found";
-        final Request finalizedRequest = request;
+        final Response finalizedRequest = response;
         final Field field = finalizedRequest.getClass().getDeclaredField("status");
         field.setAccessible(true);
         field.set(finalizedRequest, notFoundStatus);
@@ -61,7 +77,7 @@ public class ResponseTest {
     }
 
     @Test
-    public final void testAddHeader() {
+    public final void testAddHeader() throws NoSuchFieldException, IllegalAccessException {
         HashMap <String, String> expectedHeaders = new HashMap<>();
         expectedHeaders.put("Content-Type", "text/html");
         expectedHeaders.put("host", "localhost:9000");
@@ -71,7 +87,12 @@ public class ResponseTest {
         final Field field = response.getClass().getDeclaredField("headers");
         field.setAccessible(true);
 
-        HashMap<String, String> responseHeaders = field.get(response);
+        HashMap<String, String> responseHeaders = (HashMap<String, String>)field.get(response);
+
+        int expectedHeadersSize = expectedHeaders.size();
+        int responseHeadersSize = responseHeaders.size();
+
+        assertEquals(expectedHeadersSize, responseHeadersSize);
 
         for (HashMap.Entry<String, String> entry : expectedHeaders.entrySet()) {
             String key = entry.getKey();
@@ -83,22 +104,26 @@ public class ResponseTest {
     }
 
     @Test
-    public final void testGetHeaders() {
-
+    public final void testGetHeaders() throws NoSuchFieldException, IllegalAccessException {
         //given
         HashMap <String, String> expectedHeaders = new HashMap<>();
         expectedHeaders.put("Content-Type", "text/html");
         expectedHeaders.put("host", "localhost:9000");
 
-        final Request finalizedRequest = request;
-        final Field field = finalizedRequest.getClass().getDeclaredField("headers");
+        final Response finalizedResponse = response;
+        final Field field = finalizedResponse.getClass().getDeclaredField("headers");
         field.setAccessible(true);
-        field.set(finalizedRequest, expectedHeaders);
+        field.set(finalizedResponse, expectedHeaders);
 
         //when
         HashMap<String, String> responseHeaders = response.getHeaders();
 
         //then
+        int expectedHeadersSize = expectedHeaders.size();
+        int responseHeadersSize = responseHeaders.size();
+
+        assertEquals(expectedHeadersSize, responseHeadersSize);
+
         for (HashMap.Entry<String, String> entry : expectedHeaders.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
