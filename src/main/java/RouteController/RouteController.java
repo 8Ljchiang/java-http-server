@@ -1,7 +1,9 @@
 package RouteController;
 
 import Request.IRequest;
+import Request.Request;
 import Response.IResponse;
+import Response.Response;
 
 import java.io.IOException;
 
@@ -10,7 +12,7 @@ public class RouteController implements IRouteController {
     public RouteController(IRouteControllerLambda lambda) {
         this.routeLambda = lambda;
     }
-    public void handle(IRequest request, IResponse response) throws IOException {
-        this.routeLambda.operation(request, response);
+    public IResponse handle(IRequest request, IResponse response) throws IOException {
+        return this.routeLambda.operation(request, response);
     }
 }

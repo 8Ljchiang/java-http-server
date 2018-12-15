@@ -3,6 +3,7 @@ package Route;
 import Request.IRequest;
 
 import Response.IResponse;
+import Response.Response;
 import RouteController.IRouteController;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,8 +24,9 @@ public class RouteTest {
 
     public class RouteControllerMock implements IRouteController {
         @Override
-        public void handle(IRequest request, IResponse response) {
+        public IResponse handle(IRequest request, IResponse response) throws IOException {
             methodCalls.add(routeControllerHandleCallString);
+            return response;
         }
     }
 

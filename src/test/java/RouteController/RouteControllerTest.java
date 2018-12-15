@@ -1,13 +1,14 @@
 package RouteController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-
 import Request.IRequest;
 import Response.IResponse;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class RouteControllerTest {
 
@@ -95,6 +96,7 @@ public class RouteControllerTest {
         // 0. Create a mock lambda function for the controller constructor.
         IRouteControllerLambda mockControllerLambda = (IRequest req, IResponse res) -> {
             methodCalls.add(methodCallString);
+            return res;
         };
 
         // 1. Initialize the Route Controller.
@@ -109,5 +111,19 @@ public class RouteControllerTest {
 
         // 4. Assert that the lambda method was called once.
         assertEquals(true, methodCalls.contains(methodCallString));
+    }
+
+    @Test
+    public final void testLambdaReturnType() throws IOException {
+        IRouteControllerLambda mockControllerLambda = (IRequest req, IResponse res) -> res;
+
+        RouteController routeController = new RouteController(mockControllerLambda);
+
+        IRequest mockRequest = new RequestMock();
+        IResponse mockResponse = new ResponseMock();
+
+        IResponse result = routeController.handle(mockRequest, mockResponse);
+
+        assertTrue(result instanceof IResponse);
     }
 }
