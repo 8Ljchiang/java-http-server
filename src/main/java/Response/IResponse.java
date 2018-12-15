@@ -1,8 +1,13 @@
 package Response;
 
+import java.util.HashMap;
+
 public interface IResponse {
-    public void status(String status);
+    public String getStatus();
+    public void setStatus(String status);
     public void addHeader(String key, String value);
-    public void contentType(String type);
-    public void send(String body);
+    public HashMap<String, String> getHeaders();
+    public void setBody(String text);
+    public String getBody();
+    public void send();
 }

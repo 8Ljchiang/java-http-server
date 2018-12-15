@@ -27,13 +27,4 @@ public class Response {
     }
 
     public HashMap<String, String> getHeaders() { return this.headers; }
-
-    public void setContentType(String type) {
-        this.type = type;
-        this.headers.put("Content-Type", type);
-    }
-
-    public String getContentType() {
-        return this.headers.get("Content-Type");
-    }
 }

@@ -67,16 +67,6 @@ public class ResponseTest {
     }
 
     @Test
-    public final void testSetContentType() {
-
-    }
-
-    @Test
-    public final void testGetContentType() {
-
-    }
-
-    @Test
     public final void testAddHeader() throws NoSuchFieldException, IllegalAccessException {
         HashMap <String, String> expectedHeaders = new HashMap<>();
         expectedHeaders.put("Content-Type", "text/html");
