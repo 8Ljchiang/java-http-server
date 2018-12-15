@@ -33,31 +33,20 @@ public class Router {
         use(method, path, controller);
     }
 
-//    public void put(String path, RouteController controller) {
-//        Route newRoute = new Route("PUT", path, controller);
-//
-//        if (routes.get(path) == null) {
-//            ArrayList<Route> routeArray = new ArrayList<Route>();
-//            routeArray.add(newRoute);
-//            routes.put(path, routeArray);
-//        } else {
-//            var routeArray = routes.get(path);
-//            routeArray.add(newRoute);
-//        }
-//    }
-//
-//    public void post(String path, RouteController controller) {
-//        Route newRoute = new Route("POST", path, controller);
-//
-//        if (routes.get(path) == null) {
-//            ArrayList<Route> routeArray = new ArrayList<Route>();
-//            routeArray.add(newRoute);
-//            routes.put(path, routeArray);
-//        } else {
-//            var routeArray = routes.get(path);
-//            routeArray.add(newRoute);
-//        }
-//    }
+    public void put(String path, RouteController controller) {
+        String method = Methods.PUT.toString();
+        use(method, path, controller);
+    }
+
+    public void post(String path, RouteController controller) {
+        String method = Methods.POST.toString();
+        use(method, path, controller);
+    }
+
+    public void delete(String path, RouteController controller) {
+        String method = Methods.DELETE.toString();
+        use(method, path, controller);
+    }
 
 //    public void handleRequest(Request clientRequest, SocketConnection sc) throws IOException {
 //        Response res = new Response(sc);
