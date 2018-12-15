@@ -25,7 +25,7 @@ public class Route {
         return path;
     }
 
-    public void process(IRequest req, IResponse res) throws IOException {
-        this.controller.handle(req, res);
+    public IResponse process(IRequest req, IResponse res) throws IOException {
+        return this.controller.handle(req, res);
     }
 }
