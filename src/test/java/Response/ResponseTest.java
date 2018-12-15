@@ -4,8 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ResponseTest {
 
@@ -60,7 +62,50 @@ public class ResponseTest {
 
     @Test
     public final void testAddHeader() {
+        HashMap <String, String> expectedHeaders = new HashMap<>();
+        expectedHeaders.put("Content-Type", "text/html");
+        expectedHeaders.put("host", "localhost:9000");
+        response.addHeader("host", "localhost:9000");
 
+        //then
+        final Field field = response.getClass().getDeclaredField("headers");
+        field.setAccessible(true);
+
+        HashMap<String, String> responseHeaders = field.get(response);
+
+        for (HashMap.Entry<String, String> entry : expectedHeaders.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            assertTrue(responseHeaders.containsKey(key));
+            assertEquals(value, responseHeaders.get(key));
+        }
+    }
+
+    @Test
+    public final void testGetHeaders() {
+
+        //given
+        HashMap <String, String> expectedHeaders = new HashMap<>();
+        expectedHeaders.put("Content-Type", "text/html");
+        expectedHeaders.put("host", "localhost:9000");
+
+        final Request finalizedRequest = request;
+        final Field field = finalizedRequest.getClass().getDeclaredField("headers");
+        field.setAccessible(true);
+        field.set(finalizedRequest, expectedHeaders);
+
+        //when
+        HashMap<String, String> responseHeaders = response.getHeaders();
+
+        //then
+        for (HashMap.Entry<String, String> entry : expectedHeaders.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            assertTrue(responseHeaders.containsKey(key));
+            assertEquals(value, responseHeaders.get(key));
+        }
     }
 
     @Test
