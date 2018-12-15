@@ -9,5 +9,4 @@ public interface IResponse {
     public HashMap<String, String> getHeaders();
     public void setBody(String text);
     public String getBody();
-    public void send();
 }
