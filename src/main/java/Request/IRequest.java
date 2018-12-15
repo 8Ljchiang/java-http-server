@@ -10,5 +10,5 @@ public interface IRequest {
     public HashMap<String, String> getHeaders();
     public String getHeader(String headerName);
     public String getRequestString();
-    public Boolean isValid();
+//    public Boolean isValid();
 }

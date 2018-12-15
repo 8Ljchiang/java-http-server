@@ -65,11 +65,6 @@ public class RouteTest {
         public String getRequestString() {
             return null;
         }
-
-        @Override
-        public Boolean isValid() {
-            return null;
-        }
     }
 
     public class ResponseMock implements IResponse {

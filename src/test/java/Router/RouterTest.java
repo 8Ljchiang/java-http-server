@@ -1,10 +1,11 @@
 package Router;
 
 import Methods.*;
+import Request.Request;
 import Request.IRequest;
 import Response.IResponse;
+import Response.Response;
 import Route.Route;
-import RouteController.IRouteController;
 import RouteController.IRouteControllerLambda;
 import RouteController.RouteController;
 
@@ -15,12 +16,16 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class RouterTest {
 
     private Router router;
+    private Response defaultResponse = new Response();
+    private IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
+        return defaultResponse;
+    };
+    private RouteController defaultController = new RouteController(defaultControllerLambda);
 
     @Before
     public final void setup() {
@@ -35,11 +40,11 @@ public class RouterTest {
         int expectedNumOfRoutes = 1;
 
         // Test the creation of a GET route and added to the router.
-        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
-            return res;
-        };
-
-        RouteController defaultController = new RouteController(defaultControllerLambda);
+//        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
+//            return res;
+//        };
+//
+//        RouteController defaultController = new RouteController(defaultControllerLambda);
         router.use(expectedMethod, path, defaultController);
 
         // Get HashMap of Routes
@@ -73,11 +78,11 @@ public class RouterTest {
         int expectedNumOfRoutes = 1;
 
         // Test the creation of a GET route and added to the router.
-        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
-            return res;
-        };
-
-        RouteController defaultController = new RouteController(defaultControllerLambda);
+//        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
+//            return res;
+//        };
+//
+//        RouteController defaultController = new RouteController(defaultControllerLambda);
         router.get(path, defaultController);
 
         // Get HashMap of Routes
@@ -111,11 +116,11 @@ public class RouterTest {
         int expectedNumOfRoutes = 1;
 
         // Test the creation of a GET route and added to the router.
-        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
-            return res;
-        };
-
-        RouteController defaultController = new RouteController(defaultControllerLambda);
+//        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
+//            return res;
+//        };
+//
+//        RouteController defaultController = new RouteController(defaultControllerLambda);
         router.put(path, defaultController);
 
         // Get HashMap of Routes
@@ -149,11 +154,11 @@ public class RouterTest {
         int expectedNumOfRoutes = 1;
 
         // Test the creation of a GET route and added to the router.
-        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
-            return res;
-        };
-
-        RouteController defaultController = new RouteController(defaultControllerLambda);
+//        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
+//            return res;
+//        };
+//
+//        RouteController defaultController = new RouteController(defaultControllerLambda);
         router.post(path, defaultController);
 
         // Get HashMap of Routes
@@ -187,11 +192,11 @@ public class RouterTest {
         int expectedNumOfRoutes = 1;
 
         // Test the creation of a GET route and added to the router.
-        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
-            return res;
-        };
-
-        RouteController defaultController = new RouteController(defaultControllerLambda);
+//        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
+//            return res;
+//        };
+//
+//        RouteController defaultController = new RouteController(defaultControllerLambda);
         router.delete(path, defaultController);
 
         // Get HashMap of Routes
@@ -230,11 +235,11 @@ public class RouterTest {
         int expectedNumOfRoutes = 4;
 
         // Test the creation of a GET route and added to the router.
-        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
-            return res;
-        };
-
-        RouteController defaultController = new RouteController(defaultControllerLambda);
+//        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
+//            return res;
+//        };
+//
+//        RouteController defaultController = new RouteController(defaultControllerLambda);
         router.get(path1, defaultController);
         router.put(path1, defaultController);
         router.post(path1, defaultController);
@@ -286,7 +291,72 @@ public class RouterTest {
     }
 
     @Test
-    public final void testHandleRequest() {
+    public final void testHandleRequestValidGet() {
+        String method = Methods.GET.toString();
+        String path = "/";
+        String protocol = "HTTP/1.1";
+        String body = "";
+        String headers = "Host: localhost:9000\n" +
+                "User-Agent: junit/4.12.0\n" +
+                "Accept: */*\n";
+        String requestString = method + " " + path + " " + protocol + "\n"
+                + headers + "\n"
+                + "\n" + body + "\n";
+        HashMap<String, String> headersHash = new HashMap<>();
+        headersHash.put("Host", "localhost:9000");
+        headersHash.put("User-Agent", "junit/4.12.0");
+        headersHash.put("Accept", "*/*");
+
+        Request request = new Request(requestString, method, path, protocol, headersHash, body);
+
+        router.get(path, defaultController);
+
+        IResponse response = router.handleRequest(request);
+        Response defaultResponse = new Response();
+
+        // Check for valid object.
+        assertNotNull(response);
+        assertTrue(response instanceof Response);
+
+        // Check for valid fields.
+        assertEquals(defaultResponse.getBody(), response.getBody());
+        assertEquals(defaultResponse.getStatus(), response.getStatus());
+        assertEquals(defaultResponse.getProtocol(), response.getProtocol());
+
+        // Check for headers.
+        HashMap<String, String> responseHeaders = response.getHeaders();
+        assertEquals(1, responseHeaders.size());
+        assertTrue(responseHeaders.containsKey("Content-Type"));
+        assertEquals("text/html", responseHeaders.get("Content-Type"));
+    }
+
+    @Test
+    public final void testHandleRequestInvalid() {
+
+    }
+
+    @Test
+    public final void testHandleRequestValidPut() {
+
+    }
+
+    @Test
+    public final void testHandleRequestValidPost() {
+
+    }
+
+    @Test
+    public final void testHandleRequestValidDelete() {
+
+    }
+
+    @Test
+    public final void testHandleRequestOptions() {
+
+    }
+
+    @Test
+    public final void testHandleRequestHead() {
 
     }
 }

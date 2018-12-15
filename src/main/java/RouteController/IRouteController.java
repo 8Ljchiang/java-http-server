@@ -6,5 +6,5 @@ import Request.IRequest;
 import Response.IResponse;
 
 public interface IRouteController {
-     public IResponse handle(IRequest request, IResponse response) throws IOException;
+     public IResponse handle(IRequest request, IResponse response);
 }

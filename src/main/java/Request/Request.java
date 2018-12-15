@@ -1,7 +1,7 @@
 package Request;
 import java.util.HashMap;
 
-public class Request {
+public class Request implements IRequest {
 
     private String requestString;
     public String method;
