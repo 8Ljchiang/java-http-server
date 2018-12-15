@@ -1,6 +1,7 @@
 package Route;
 
 import Request.IRequest;
+
 import Response.IResponse;
 import RouteController.IRouteController;
 import org.junit.Before;
@@ -73,7 +74,12 @@ public class RouteTest {
     public class ResponseMock implements IResponse {
 
         @Override
-        public void status(String status) {
+        public String getStatus() {
+            return null;
+        }
+
+        @Override
+        public void setStatus(String status) {
 
         }
 
@@ -83,13 +89,18 @@ public class RouteTest {
         }
 
         @Override
-        public void contentType(String type) {
+        public HashMap<String, String> getHeaders() {
+            return null;
+        }
+
+        @Override
+        public void setBody(String text) {
 
         }
 
         @Override
-        public void send(String body) {
-
+        public String getBody() {
+            return null;
         }
     }
 
