@@ -8,5 +8,7 @@ public interface IResponse {
     public void addHeader(String key, String value);
     public HashMap<String, String> getHeaders();
     public void setBody(String text);
+    public String getProtocol();
+    public void setProtocol(String protocol);
     public String getBody();
 }
