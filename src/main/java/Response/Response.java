@@ -27,11 +27,11 @@ public class Response implements IResponse{
 
     public HashMap<String, String> getHeaders() { return this.headers; }
 
-    public void setBody(String text) {
-        this.body = text;
-    }
+    public void setBody(String text) { this.body = text; }
 
-    public String getBody() {
-        return body;
-    }
+    public String getBody() { return body; }
+
+    public String getProtocol() { return protocol; }
+
+    public void setProtocol(String protocol) { this.protocol = protocol; }
 }

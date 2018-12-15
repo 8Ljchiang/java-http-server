@@ -82,6 +82,16 @@ public class RouteControllerTest {
         }
 
         @Override
+        public String getProtocol() {
+            return null;
+        }
+
+        @Override
+        public void setProtocol(String protocol) {
+
+        }
+
+        @Override
         public String getBody() {
             return null;
         }

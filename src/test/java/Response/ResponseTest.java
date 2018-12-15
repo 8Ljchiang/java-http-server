@@ -129,4 +129,32 @@ public class ResponseTest {
         //then
         assertEquals("field wasn't retrieved properly", result, body);
     }
+
+    @Test
+    public final void testGetProtocol() throws NoSuchFieldException, IllegalAccessException {
+        //given
+        String expectedProtocol = "HTTP/1.1";
+
+        final Response finalizedResponse = response;
+        final Field field = finalizedResponse.getClass().getDeclaredField("protocol");
+        field.setAccessible(true);
+        field.set(finalizedResponse, expectedProtocol);
+
+        //when
+        final String result = finalizedResponse.getProtocol();
+
+        //then
+        assertEquals("field wasn't retrieved properly", result, expectedProtocol);
+    }
+
+    @Test
+    public final void testSetProtocol() throws NoSuchFieldException, IllegalAccessException {
+        String expectedProtocol = "HTTP/1.1";
+        response.setProtocol(expectedProtocol);
+
+        //then
+        final Field field = response.getClass().getDeclaredField("protocol");
+        field.setAccessible(true);
+        assertEquals("Fields didn't match", field.get(response), expectedProtocol);
+    }
 }
