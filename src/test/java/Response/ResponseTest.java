@@ -33,7 +33,28 @@ public class ResponseTest {
     }
 
     @Test
+    public final void tesGetStatus() {
+        //given
+        String notFoundStatus = "404 Not Found";
+        final Request finalizedRequest = request;
+        final Field field = finalizedRequest.getClass().getDeclaredField("status");
+        field.setAccessible(true);
+        field.set(finalizedRequest, notFoundStatus);
+
+        //when
+        final String result = finalizedRequest.getStatus();
+
+        //then
+        assertEquals("field wasn't retrieved properly", result, notFoundStatus);
+    }
+
+    @Test
     public final void testSetContentType() {
+
+    }
+
+    @Test
+    public final void testGetContentType() {
 
     }
 
