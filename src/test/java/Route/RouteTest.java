@@ -1,10 +1,5 @@
 package Route;
 
-import Request.IRequest;
-
-import Response.IResponse;
-import Response.Response;
-import RouteController.IRouteController;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -13,6 +8,10 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import Request.IRequest;
+import Response.IResponse;
+import RouteController.IRouteController;
 
 public class RouteTest {
 
@@ -24,7 +23,7 @@ public class RouteTest {
 
     public class RouteControllerMock implements IRouteController {
         @Override
-        public IResponse handle(IRequest request, IResponse response) throws IOException {
+        public IResponse handle(IRequest request, IResponse response) {
             methodCalls.add(routeControllerHandleCallString);
             return response;
         }
