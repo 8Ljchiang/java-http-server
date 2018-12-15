@@ -13,30 +13,11 @@ import static org.junit.Assert.assertTrue;
 
 public class ResponseTest {
 
-    public class SocketConnectionMock implements ISocketConnection {
-
-        @Override
-        public String readInputData() throws IOException {
-            return null;
-        }
-
-        @Override
-        public void sendOutputData(String text) throws IOException {
-
-        }
-
-        @Override
-        public void closeSocketConnection() throws IOException {
-
-        }
-    }
-
-    private SocketConnectionMock socketConnection = new SocketConnectionMock();
     private Response response;
 
     @Before
     public final void setup() {
-        response = new Response(socketConnection);
+        response = new Response();
     }
 
     @Test
@@ -124,13 +105,13 @@ public class ResponseTest {
     }
 
     @Test
-    public final void testSetBody() {
+    public final void testSetBody() throws NoSuchFieldException, IllegalAccessException{
+        String body = "{ \"response\" : \"Hello world\" }";
+        response.setBody(body);
 
+        //then
+        final Field field = response.getClass().getDeclaredField("body");
+        field.setAccessible(true);
+        assertEquals("Fields didn't match", field.get(response), body);
     }
-
-    @Test
-    public final void testSend() {
-
-    }
-
 }

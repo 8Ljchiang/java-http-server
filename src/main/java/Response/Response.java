@@ -4,15 +4,14 @@ import SocketConnection.ISocketConnection;
 
 import java.util.HashMap;
 
-public class Response {
-    private ISocketConnection sc;
+public class Response implements IResponse{
     private String status = "200 OK";
-    private String http = "HTTP/1.1";
+    private String protocol = "HTTP/1.1";
     private String type = "text/html";
+    private String body = "";
     private HashMap<String, String> headers = new HashMap<>();
 
-    public Response(ISocketConnection sc) {
-        this.sc = sc;
+    public Response() {
         this.headers.put("Content-Type", type);
     }
 
@@ -27,4 +26,12 @@ public class Response {
     }
 
     public HashMap<String, String> getHeaders() { return this.headers; }
+
+    public void setBody(String text) {
+        this.body = text;
+    }
+
+    public String getBody() {
+        return body;
+    }
 }
