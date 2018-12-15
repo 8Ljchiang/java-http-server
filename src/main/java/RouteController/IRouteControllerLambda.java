@@ -1,10 +1,10 @@
 package RouteController;
 
+import java.io.IOException;
+
 import Request.IRequest;
 import Response.IResponse;
 
-import java.io.IOException;
-
 public interface IRouteControllerLambda {
-    public void operation(IRequest req, IResponse res) throws IOException;
+    public IResponse operation(IRequest req, IResponse res) throws IOException;
 }
