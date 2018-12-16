@@ -48,10 +48,6 @@ public class RouteControllerTest {
             return null;
         }
 
-        @Override
-        public Boolean isValid() {
-            return null;
-        }
     }
 
     public class ResponseMock implements IResponse {

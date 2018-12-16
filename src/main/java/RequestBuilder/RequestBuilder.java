@@ -54,7 +54,7 @@ public class RequestBuilder {
                     String key = entry[0].trim();
 
 
-                    if (key.equals("host")) {
+                    if (key.toLowerCase().equals("host")) {
                         String value = (entry[1] + ":" + entry[2]);
                         headers.put(key.trim(), value.trim());
                     } else {
