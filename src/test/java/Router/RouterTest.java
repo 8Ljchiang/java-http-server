@@ -331,32 +331,313 @@ public class RouterTest {
     }
 
     @Test
-    public final void testHandleRequestInvalid() {
+    public final void testHandleRequestInvalid1() {
+        String method = "INVALID";
+        String path = "/";
+        String protocol = "HTTP/1.1";
+        String body = "";
+        String headers = "Host: localhost:9000\n" +
+                "User-Agent: junit/4.12.0\n" +
+                "Accept: */*\n";
+        String requestString = method + " " + path + " " + protocol + "\n"
+                + headers + "\n"
+                + "\n" + body + "\n";
+        HashMap<String, String> headersHash = new HashMap<>();
+        headersHash.put("Host", "localhost:9000");
+        headersHash.put("User-Agent", "junit/4.12.0");
+        headersHash.put("Accept", "*/*");
 
+        Request request = new Request(requestString, method, path, protocol, headersHash, body);
+
+        router.get(path, defaultController);
+
+        IResponse response = router.handleRequest(request);
+        Response defaultResponse = new Response();
+
+        // Check for valid object.
+        assertNotNull(response);
+        assertTrue(response instanceof Response);
+        defaultResponse.setStatus("400 Bad Request");
+
+        // Check for valid fields.
+        assertEquals(defaultResponse.getBody(), response.getBody());
+        assertEquals(defaultResponse.getStatus(), response.getStatus());
+        assertEquals(defaultResponse.getProtocol(), response.getProtocol());
+
+        // Check for headers.
+        HashMap<String, String> responseHeaders = response.getHeaders();
+        assertEquals(1, responseHeaders.size());
+        assertTrue(responseHeaders.containsKey("Content-Type"));
+        assertEquals("text/html", responseHeaders.get("Content-Type"));
     }
 
     @Test
-    public final void testHandleRequestValidPut() {
+    public final void testHandleRequestInvalid2() {
+        String method = "GET";
+        String path = "/";
+        String protocol = "INVALID/1.1";
+        String body = "";
+        String headers = "Host: localhost:9000\n" +
+                "User-Agent: junit/4.12.0\n" +
+                "Accept: */*\n";
+        String requestString = method + " " + path + " " + protocol + "\n"
+                + headers + "\n"
+                + "\n" + body + "\n";
+        HashMap<String, String> headersHash = new HashMap<>();
+        headersHash.put("Host", "localhost:9000");
+        headersHash.put("User-Agent", "junit/4.12.0");
+        headersHash.put("Accept", "*/*");
 
+        Request request = new Request(requestString, method, path, protocol, headersHash, body);
+
+        router.get(path, defaultController);
+
+        IResponse response = router.handleRequest(request);
+        Response defaultResponse = new Response();
+        defaultResponse.setStatus("400 Bad Request");
+
+        // Check for valid object.
+        assertNotNull(response);
+        assertTrue(response instanceof Response);
+
+        // Check for valid fields.
+        assertEquals(defaultResponse.getBody(), response.getBody());
+        assertEquals(defaultResponse.getStatus(), response.getStatus());
+        assertEquals(defaultResponse.getProtocol(), response.getProtocol());
+
+        // Check for headers.
+        HashMap<String, String> responseHeaders = response.getHeaders();
+        assertEquals(1, responseHeaders.size());
+        assertTrue(responseHeaders.containsKey("Content-Type"));
+        assertEquals("text/html", responseHeaders.get("Content-Type"));
     }
 
     @Test
-    public final void testHandleRequestValidPost() {
+    public final void testHandleRequestInvalid3() {
+        String method = "GET";
+        String path = "/";
+        String protocol = "";
+        String body = "";
+        String headers = "Host: localhost:9000\n" +
+                "User-Agent: junit/4.12.0\n" +
+                "Accept: */*\n";
+        String requestString = method + " " + path + " " + protocol + "\n"
+                + headers + "\n"
+                + "\n" + body + "\n";
+        HashMap<String, String> headersHash = new HashMap<>();
+        headersHash.put("Host", "localhost:9000");
+        headersHash.put("User-Agent", "junit/4.12.0");
+        headersHash.put("Accept", "*/*");
 
+        Request request = new Request(requestString, method, path, protocol, headersHash, body);
+
+        router.get(path, defaultController);
+
+        IResponse response = router.handleRequest(request);
+        Response defaultResponse = new Response();
+        defaultResponse.setStatus("400 Bad Request");
+
+        // Check for valid object.
+        assertNotNull(response);
+        assertTrue(response instanceof Response);
+
+        // Check for valid fields.
+        assertEquals(defaultResponse.getBody(), response.getBody());
+        assertEquals(defaultResponse.getStatus(), response.getStatus());
+        assertEquals(defaultResponse.getProtocol(), response.getProtocol());
+
+        // Check for headers.
+        HashMap<String, String> responseHeaders = response.getHeaders();
+        assertEquals(1, responseHeaders.size());
+        assertTrue(responseHeaders.containsKey("Content-Type"));
+        assertEquals("text/html", responseHeaders.get("Content-Type"));
     }
 
-    @Test
-    public final void testHandleRequestValidDelete() {
-
-    }
+//    @Test
+//    public final void testHandleRequestValidPut() {
+//
+//    }
+//
+//    @Test
+//    public final void testHandleRequestValidPost() {
+//
+//    }
+//
+//    @Test
+//    public final void testHandleRequestValidDelete() {
+//
+//    }
 
     @Test
     public final void testHandleRequestOptions() {
+        String method = "OPTIONS";
+        String path = "/";
+        String protocol = "HTTP/1.1";
+        String body = "";
+        String headers = "Host: localhost:9000\n" +
+                "User-Agent: junit/4.12.0\n" +
+                "Accept: */*\n";
+        String requestString = method + " " + path + " " + protocol + "\n"
+                + headers + "\n"
+                + "\n" + body + "\n";
+        HashMap<String, String> headersHash = new HashMap<>();
+        headersHash.put("Host", "localhost:9000");
+        headersHash.put("User-Agent", "junit/4.12.0");
+        headersHash.put("Accept", "*/*");
 
+        Request request = new Request(requestString, method, path, protocol, headersHash, body);
+
+        router.get(path, defaultController);
+        router.put(path, defaultController);
+        router.post(path, defaultController);
+        router.delete(path, defaultController);
+
+        IResponse response = router.handleRequest(request);
+        Response defaultResponse = new Response();
+        defaultResponse.addHeader("Allow", "GET, PUT, POST, DELETE");
+
+        // Check for valid object.
+        assertNotNull(response);
+        assertTrue(response instanceof Response);
+
+        // Check for valid fields.
+        assertEquals(defaultResponse.getBody(), response.getBody());
+        assertEquals(defaultResponse.getStatus(), response.getStatus());
+        assertEquals(defaultResponse.getProtocol(), response.getProtocol());
+
+        // Check for headers.
+        HashMap<String, String> responseHeaders = response.getHeaders();
+        assertEquals(2, responseHeaders.size());
+        assertTrue(responseHeaders.containsKey("Content-Type"));
+        assertEquals("text/html", responseHeaders.get("Content-Type"));
     }
 
     @Test
     public final void testHandleRequestHead() {
+        String method = "HEAD";
+        String path = "/";
+        String protocol = "HTTP/1.1";
+        String body = "";
+        String headers = "Host: localhost:9000\n" +
+                "User-Agent: junit/4.12.0\n" +
+                "Accept: */*\n";
+        String requestString = method + " " + path + " " + protocol + "\n"
+                + headers + "\n"
+                + "\n" + body + "\n";
+        HashMap<String, String> headersHash = new HashMap<>();
+        headersHash.put("Host", "localhost:9000");
+        headersHash.put("User-Agent", "junit/4.12.0");
+        headersHash.put("Accept", "*/*");
 
+        Request request = new Request(requestString, method, path, protocol, headersHash, body);
+
+        router.get(path, defaultController);
+
+        IResponse response = router.handleRequest(request);
+        Response defaultResponse = new Response();
+
+        // Check for valid object.
+        assertNotNull(response);
+        assertTrue(response instanceof Response);
+
+        // Check for valid fields.
+        assertEquals(defaultResponse.getBody(), response.getBody());
+        assertEquals(defaultResponse.getStatus(), response.getStatus());
+        assertEquals(defaultResponse.getProtocol(), response.getProtocol());
+
+        // Check for headers.
+        HashMap<String, String> responseHeaders = response.getHeaders();
+        assertEquals(1, responseHeaders.size());
+        assertTrue(responseHeaders.containsKey("Content-Type"));
+        assertEquals("text/html", responseHeaders.get("Content-Type"));
+    }
+
+    @Test
+    public final void testHandleRequestMissingPath() {
+        String method = "DELETE";
+        String path = "/post";
+        String protocol = "HTTP/1.1";
+        String body = "{ \"postId\" : \"123\" }";
+        String headers = "Host: localhost:9000\n" +
+                "User-Agent: junit/4.12.0\n" +
+                "Accept: */*\n";
+        String requestString = method + " " + path + " " + protocol + "\n"
+                + headers + "\n"
+                + "\n" + body + "\n";
+        HashMap<String, String> headersHash = new HashMap<>();
+        headersHash.put("Host", "localhost:9000");
+        headersHash.put("User-Agent", "junit/4.12.0");
+        headersHash.put("Content-Type", "application/json");
+        headersHash.put("Accept", "*/*");
+
+        Request request = new Request(requestString, method, path, protocol, headersHash, body);
+
+        router.get(path, defaultController);
+        router.put(path, defaultController);
+        router.post(path, defaultController);
+
+        IResponse response = router.handleRequest(request);
+        Response defaultResponse = new Response();
+        defaultResponse.setStatus("405 Method Not Allowed");
+
+        // Check for valid object.
+        assertNotNull(response);
+        assertTrue(response instanceof Response);
+
+        // Check for valid fields.
+        assertEquals(defaultResponse.getBody(), response.getBody());
+        assertEquals(defaultResponse.getStatus(), response.getStatus());
+        assertEquals(defaultResponse.getProtocol(), response.getProtocol());
+
+        // Check for headers.
+        HashMap<String, String> responseHeaders = response.getHeaders();
+        assertEquals(1, responseHeaders.size());
+        assertTrue(responseHeaders.containsKey("Content-Type"));
+        assertEquals("text/html", responseHeaders.get("Content-Type"));
+    }
+
+    @Test
+    public final void testHandleRequestMissingRoute() {
+        String method = "POST";
+        String path = "/post";
+        String protocol = "HTTP/1.1";
+        String body = "{ \"postId\" : \"123\" }";
+        String headers = "Host: localhost:9000\n" +
+                "User-Agent: junit/4.12.0\n" +
+                "Accept: */*\n";
+        String requestString = method + " " + path + " " + protocol + "\n"
+                + headers + "\n"
+                + "\n" + body + "\n";
+        HashMap<String, String> headersHash = new HashMap<>();
+        headersHash.put("Host", "localhost:9000");
+        headersHash.put("User-Agent", "junit/4.12.0");
+        headersHash.put("Content-Type", "application/json");
+        headersHash.put("Accept", "*/*");
+
+        String noPath = "/dashboard";
+        Request request = new Request(requestString, method, noPath, protocol, headersHash, body);
+
+        router.get(path, defaultController);
+        router.put(path, defaultController);
+        router.post(path, defaultController);
+
+        IResponse response = router.handleRequest(request);
+        Response defaultResponse = new Response();
+        defaultResponse.setStatus("404 Not Found");
+
+        // Check for valid object.
+        assertNotNull(response);
+        assertTrue(response instanceof Response);
+
+        // Check for valid fields.
+        assertEquals(defaultResponse.getBody(), response.getBody());
+        assertEquals(defaultResponse.getStatus(), response.getStatus());
+        assertEquals(defaultResponse.getProtocol(), response.getProtocol());
+
+        // Check for headers.
+        HashMap<String, String> responseHeaders = response.getHeaders();
+        assertEquals(1, responseHeaders.size());
+        assertTrue(responseHeaders.containsKey("Content-Type"));
+        assertEquals("text/html", responseHeaders.get("Content-Type"));
     }
 }

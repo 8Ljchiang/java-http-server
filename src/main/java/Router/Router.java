@@ -49,42 +49,72 @@ public class Router {
         use(method, path, controller);
     }
 
-    @Nullable
     public IResponse handleRequest(IRequest clientRequest) {
         Response defaultResponse = new Response();
         String requestType = clientRequest.getType().split("/")[0];
-        if (isValidRequest(clientRequest) && requestType.equals("HTTP") && containsRoute(clientRequest)) {
-            if (clientRequest.getMethod().equals(Methods.HEAD.toString())) {
-//                handleHeadRequest(clientRequest, res);
-            } else if (clientRequest.getMethod().equals(Methods.OPTIONS.toString())) {
-//                handleOptionRequest(clientRequest, res);
-            } else {
-                // Find matching route
-                Route r = getMatchingRoute(clientRequest);
-                // Have route handle the information and send request and response objects.
-                if (r != null) {
-                    return r.process(clientRequest, defaultResponse);
+        String requestMethod = clientRequest.getMethod().trim().toUpperCase();
+        if (isValidRequest(clientRequest) && requestType.equals("HTTP")) {
+            if (containsPath(clientRequest)) {
+                if (containsRoute(clientRequest) || requestMethod.equals(Methods.HEAD.toString()) || requestMethod.equals(Methods.OPTIONS.toString())) {
+                    if (clientRequest.getMethod().equals(Methods.HEAD.toString())) {
+                        return handleHeadRequest(clientRequest, defaultResponse);
+                    } else if (clientRequest.getMethod().equals(Methods.OPTIONS.toString())) {
+                        return handleOptionRequest(clientRequest, defaultResponse);
+                    } else {
+                        Route rt = getMatchingRoute(clientRequest);
+                        if (rt != null) {
+                            return rt.process(clientRequest, defaultResponse);
+                        } else {
+                            return handleMissingRoute(clientRequest, defaultResponse);
+                        }
+                    }
                 } else {
-                    // HandleMissingRoute;
+                    return handleMissingRoute(clientRequest, defaultResponse);
                 }
+            } else {
+                return handleMissingPath(clientRequest, defaultResponse);
             }
         } else {
-            // HandleInvalidRequest
-//            System.out.println(" *** Router: ROUTE NOT FOUND *** ");
-//            res.contentType("application/json");
-//            res.status("404 Not Found");
-//            res.send("{ \"error\" : \"unable to find resource\" }");
+            return handleInvalidRequest(clientRequest, defaultResponse);
         }
-        return null;
     }
-//
-//    private void handleHeadRequest(Request clientRequest, Response res) {
-//
-//    }
-//
-//    private void handleOptionRequest(Request clientRequest, Response res) {
-//
-//    }
+
+    private IResponse handleHeadRequest(IRequest clientRequest, Response response) {
+        Route route = getMatchingRoute(Methods.GET.toString(), clientRequest.getPath());
+        response.setBody("");
+        if (route != null) {
+            return route.process(clientRequest, response);
+        }
+        return handleMissingRoute(clientRequest, response);
+    }
+
+    private IResponse handleOptionRequest(IRequest clientRequest, Response response) {
+        ArrayList<Route> routes = getRoutes(clientRequest.getPath());
+        ArrayList<String> methods = new ArrayList<>();
+
+        for (Route route:routes) {
+            methods.add(route.getMethod());
+        }
+
+        String methodsString = String.join(", ", methods);
+        response.addHeader("Allow", methodsString);
+        return response;
+    }
+
+    private IResponse handleMissingRoute(IRequest clientRequest, Response response) {
+        response.setStatus("405 Method Not Allowed");
+        return response;
+    }
+
+    private IResponse handleInvalidRequest(IRequest clientRequest, Response response) {
+        response.setStatus("400 Bad Request");
+        return response;
+    }
+
+    private IResponse handleMissingPath(IRequest clientRequest, Response response) {
+        response.setStatus("404 Not Found");
+        return response;
+    }
 
     private ArrayList<Route> getRoutes(String path) {
         return this.routes.get(path);
@@ -105,6 +135,21 @@ public class Router {
             }
         }
         return null;
+    }
+
+    @Nullable
+    private Route getMatchingRoute(String method, String path) {
+        ArrayList<Route> routes = getRoutes(path);
+        for (Route route: routes) {
+            if (route.getMethod().toUpperCase().equals(method)) {
+                return route;
+            }
+        }
+        return null;
+    }
+
+    private boolean containsPath(IRequest req) {
+        return routes.containsKey(req.getPath());
     }
 
     private boolean containsRoute(IRequest req) {
