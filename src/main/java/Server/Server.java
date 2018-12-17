@@ -17,6 +17,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 public class Server {
 
@@ -63,6 +64,13 @@ public class Server {
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("port", port);
         dispatcher.process("listen", payload);
+
+        try {
+            TimeUnit.MILLISECONDS.sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         run();
     }
 
@@ -159,7 +167,6 @@ public class Server {
 
         try {
             serverListener.bindAndListen(port);
-            showServerInfo(port, "JAVA-HTTP-SERVER");
         } catch (IOException e) {
             handleError(e.getMessage());
         }

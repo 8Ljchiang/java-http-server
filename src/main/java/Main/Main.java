@@ -1,5 +1,6 @@
 package Main;
 
+import CommandHandler.ICommandHandlerLambda;
 import Request.IRequest;
 import Response.IResponse;
 import RouteController.IRouteControllerLambda;
@@ -8,6 +9,7 @@ import Router.Router;
 import Server.Server;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class Main {
 
@@ -66,9 +68,15 @@ public class Main {
         router.post("/echo", postEchoRouteController);
         router.get("/echo", postEchoRouteController);
 
+        int port = 9000;
         Server server = new Server(router);
-        server.listen(9000);
 
+        ICommandHandlerLambda showServerInfoHandler = (HashMap<String, Object> payload) -> {
+            System.out.println("JAVA-HTTP-SERVER: Listening on port " + port);
+        };
+
+        server.on("listen", showServerInfoHandler);
+        server.listen(port);
 
 //        catch (IOException e) {
 //            e.printStackTrace();

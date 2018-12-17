@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+//import java.util.concurrent.TimeUnit;
 
 
 public class CommandDispatcher {
@@ -20,9 +21,18 @@ public class CommandDispatcher {
             System.out.println("DISPATCHER: PROCESS - " + commandType);
             ArrayList<ICommandHandlerLambda> commandHandlers = commands.get(commandType);
 
-            for (ICommandHandlerLambda handler : commandHandlers) {
-                handler.operation(payload);
-            }
+            Runnable runnableTask = () -> {
+                try {
+                    for (ICommandHandlerLambda handler : commandHandlers) {
+                        handler.operation(payload);
+                    }
+                } catch (Error e) {
+                    e.printStackTrace();
+                }
+            };
+
+            executor.execute(runnableTask);
+
         } else {
             System.out.println("DISPATCHER: Invalid - " + commandType);
         }
