@@ -17,6 +17,7 @@ import java.util.Date;
 public class Server {
 
     private Router router;
+    private HashMap<String, Lambda>
     private Charset charset = StandardCharsets.UTF_8;
 
     public Server(Router router) {
