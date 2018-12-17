@@ -9,7 +9,6 @@ import ResponseBuilder.ResponseBuilder;
 import Router.Router;
 import ServerListener.ServerListener;
 import SocketConnection.SocketConnection;
-import com.intellij.codeInsight.template.postfix.templates.SoutPostfixTemplate;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -47,6 +46,7 @@ public class Server {
         ICommandHandlerLambda closeServerHandler = (HashMap<String, Object> payload) -> {
             dispatcher.stopExecution();
             this.handleCloseServer();
+            // What is command for exit process();
         };
 
         String listenType = "listen";

@@ -71,11 +71,16 @@ public class Main {
         int port = 9000;
         Server server = new Server(router);
 
-        ICommandHandlerLambda showServerInfoHandler = (HashMap<String, Object> payload) -> {
-            System.out.println("JAVA-HTTP-SERVER: Listening on port " + port);
+        ICommandHandlerLambda showServerInfoHandler1 = (HashMap<String, Object> payload) -> {
+            System.out.println("*1* JAVA-HTTP-SERVER: Listening on port " + port);
         };
 
-        server.on("listen", showServerInfoHandler);
+        ICommandHandlerLambda showServerInfoHandler2 = (HashMap<String, Object> payload) -> {
+            System.out.println("*2* JAVA-HTTP-SERVER: Listening on port " + port);
+        };
+
+        server.on("listen", showServerInfoHandler1);
+        server.on("listen", showServerInfoHandler2);
         server.listen(port);
 
 //        catch (IOException e) {
