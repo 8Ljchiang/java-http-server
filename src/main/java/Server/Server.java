@@ -30,6 +30,24 @@ public class Server {
         init();
     }
 
+    public void listen(int port) {
+        HashMap<String, Object> payload = new HashMap<>();
+        payload.put("port", port);
+        dispatcher.process("listen", payload);
+
+        try {
+            TimeUnit.MILLISECONDS.sleep(300);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        run();
+    }
+
+    public void on(String eventType, ICommandHandlerLambda commandHandler) {
+        dispatcher.registerCommandHandler(eventType, commandHandler);
+    }
+
     private void init() {
         ICommandHandlerLambda errorHandler = (HashMap<String, Object> payload) -> {
             this.error((String)payload.get("error"));
@@ -58,24 +76,6 @@ public class Server {
         dispatcher.registerCommandHandler(errorType, errorHandler);
         dispatcher.registerCommandHandler(connectionType, newConnectionHandler);
         dispatcher.registerCommandHandler(closeServerType, closeServerHandler);
-    }
-
-    public void listen(int port) {
-        HashMap<String, Object> payload = new HashMap<>();
-        payload.put("port", port);
-        dispatcher.process("listen", payload);
-
-        try {
-            TimeUnit.MILLISECONDS.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        run();
-    }
-
-    public void on(String eventType, ICommandHandlerLambda commandHandler) {
-        dispatcher.registerCommandHandler(eventType, commandHandler);
     }
 
     private void run() {
