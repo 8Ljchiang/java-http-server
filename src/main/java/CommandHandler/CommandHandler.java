@@ -1,5 +1,7 @@
 package CommandHandler;
 
+import java.util.HashMap;
+
 public class CommandHandler {
 
     private ICommandHandlerLambda lambdaFunction;
@@ -8,8 +10,8 @@ public class CommandHandler {
         this.lambdaFunction = lambdaFunc;
     }
 
-    public void execute() {
-        this.lambdaFunction.operation();
+    public void execute(HashMap<String, Object> payload) {
+        this.lambdaFunction.operation(payload);
     }
 }
 

@@ -1,5 +1,7 @@
 package Server;
 
+import CommandDispatcher.CommandDispatcher;
+import CommandHandler.ICommandHandlerLambda;
 import Request.IRequest;
 import RequestBuilder.RequestBuilder;
 import Response.IResponse;
@@ -7,53 +9,93 @@ import ResponseBuilder.ResponseBuilder;
 import Router.Router;
 import ServerListener.ServerListener;
 import SocketConnection.SocketConnection;
+import com.intellij.codeInsight.template.postfix.templates.SoutPostfixTemplate;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
 
 public class Server {
 
     private Router router;
-    private HashMap<String, Lambda>
+    private ServerListener serverListener;
+    private CommandDispatcher dispatcher = new CommandDispatcher();
     private Charset charset = StandardCharsets.UTF_8;
 
     public Server(Router router) {
         this.router = router;
+        init();
     }
 
-    public void listen(int port) throws IOException {
-        // 1. Initialize ServerConnectionListener.
-        ServerListener serverListener = new ServerListener();
+    private void init() {
+        ICommandHandlerLambda errorHandler = (HashMap<String, Object> payload) -> {
+            this.error((String)payload.get("error"));
+        };
 
-        try {
-            serverListener.bindAndListen(port);
-            showServerInfo(port, "JAVA-HTTP-SERVER");
+        ICommandHandlerLambda listenHandler = (HashMap<String, Object> payload) -> {
+            this.handleListen((int)payload.get("port"));
+        };
 
-            while (true) {
-                // 2. Accept SocketConnection(s).
+        ICommandHandlerLambda newConnectionHandler = (HashMap<String, Object> payload) -> {
+            this.handleConnection((Socket)payload.get("socket"));
+        };
+
+        ICommandHandlerLambda closeServerHandler = (HashMap<String, Object> payload) -> {
+            dispatcher.stopExecution();
+            this.handleCloseServer();
+        };
+
+        String listenType = "listen";
+        String errorType = "error";
+        String connectionType = "connection";
+        String closeServerType = "close";
+
+        dispatcher.registerCommandHandler(listenType, listenHandler);
+        dispatcher.registerCommandHandler(errorType, errorHandler);
+        dispatcher.registerCommandHandler(connectionType, newConnectionHandler);
+        dispatcher.registerCommandHandler(closeServerType, closeServerHandler);
+    }
+
+    public void listen(int port) {
+        HashMap<String, Object> payload = new HashMap<>();
+        payload.put("port", port);
+        dispatcher.process("listen", payload);
+        run();
+    }
+
+    public void on(String eventType, ICommandHandlerLambda commandHandler) {
+        dispatcher.registerCommandHandler(eventType, commandHandler);
+    }
+
+    private void run() {
+        while (true) {
+            // 2. Accept SocketConnection(s).
+            HashMap<String, Object> payload = new HashMap<>();
+            try {
                 Socket socket = serverListener.acceptSocketConnection();
-                handleIncomingConnectionThread(socket);
+                payload.put("socket", socket);
+            } catch (IOException e) {
+                handleError(e.getMessage());
+            } finally {
+                dispatcher.process("connection", payload);
             }
-        } catch (IOException e) {
-            handleError(e.getMessage());
-        } finally {
-            closeServerListener(serverListener);
+//            acceptConnection(serverListener);
         }
     }
 
-    private void handleIncomingConnectionThread(Socket socket) {
-        SocketConnection socketConnection = new SocketConnection(socket, charset);
+    private void handleCloseServer() {
+        closeServerListener(serverListener);
+    }
 
-        String inputData = readInputData(socketConnection);
+    private String receive(SocketConnection socketConnection) {
+        return readInputData(socketConnection);
+    }
 
-        IResponse response = routeInputData(inputData);
-
-        sendResponse(response, socketConnection);
-
-        closeConnectionWithClient(socketConnection);
+    private IResponse compute(String text) {
+        return routeInputData(text);
     }
 
     private String readInputData(SocketConnection socketConnection) {
@@ -111,8 +153,46 @@ public class Server {
         }
     }
 
+    private void handleListen(int port) {
+        // 1. Initialize ServerConnectionListener.
+        serverListener = new ServerListener();
+
+        try {
+            serverListener.bindAndListen(port);
+            showServerInfo(port, "JAVA-HTTP-SERVER");
+        } catch (IOException e) {
+            handleError(e.getMessage());
+        }
+    }
+
+//    private void acceptConnection(ServerListener serverListener) {
+//        try {
+//            Socket socket = serverListener.acceptSocketConnection();
+//            handleConnection(socket);
+//        } catch (IOException e) {
+//            handleError(e.getMessage());
+//        }
+//    }
+
+    private void handleConnection(Socket socket) {
+        SocketConnection socketConnection = new SocketConnection(socket, charset);
+
+        String inputData = receive(socketConnection);
+
+        IResponse response = compute(inputData);
+
+        sendResponse(response, socketConnection);
+
+        closeConnectionWithClient(socketConnection);
+    }
+
     private void handleError(String errorMessage) {
         System.out.println("Error: " + errorMessage);
+    }
+
+    private void error(String text) {
+        System.out.println(" >>> Error <<< ");
+        System.out.println(text);
     }
 
     private void showClosingSocketInfo() {

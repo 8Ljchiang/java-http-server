@@ -67,11 +67,11 @@ public class Main {
         router.get("/echo", postEchoRouteController);
 
         Server server = new Server(router);
-        
-        try {
-            server.listen(9000);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        server.listen(9000);
+
+
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }
