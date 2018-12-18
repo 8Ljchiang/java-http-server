@@ -114,7 +114,7 @@ public class Main {
 
 
         int port = 5000;
-        Server server = new Server(router);
+        Server server = new Server(router, true);
 
         ICommandHandlerLambda showServerInfoHandler1 = (HashMap<String, Object> payload) -> {
             System.out.println("*1* JAVA-HTTP-SERVER: Listening on port " + port);
