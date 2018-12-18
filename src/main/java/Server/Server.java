@@ -23,12 +23,13 @@ public class Server {
     private Router router;
     private Boolean isBlocking;
     private ServerListener serverListener;
-    private CommandDispatcher dispatcher = new CommandDispatcher();
+    private CommandDispatcher dispatcher;
     private Charset charset = StandardCharsets.UTF_8;
 
-    public Server(Router router, Boolean isBlocking) {
+    public Server(Router router, Boolean isBlocking, int maxThreads) {
         this.router = router;
         this.isBlocking = isBlocking;
+        this.dispatcher = new CommandDispatcher(maxThreads);
         init();
     }
 

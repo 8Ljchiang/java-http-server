@@ -11,10 +11,21 @@ import java.util.concurrent.Executors;
 
 public class CommandDispatcher {
 
-    private ExecutorService executor = Executors.newFixedThreadPool(10);
+    private int nThreads = 10;
+    private ExecutorService executor;
     private HashMap<String, ArrayList<ICommandHandlerLambda>> commands = new HashMap<>();
 
-    public CommandDispatcher() { }
+    public CommandDispatcher() {
+        executor = Executors.newFixedThreadPool(nThreads);
+    }
+
+    public CommandDispatcher(int maxThreads) {
+        if (maxThreads > 0 && maxThreads < 50) {
+            executor = Executors.newFixedThreadPool(maxThreads);
+        } else {
+            executor = Executors.newFixedThreadPool(nThreads);
+        }
+    }
 
     public void process(String commandType, HashMap<String, Object> payload) {
         if (containsCommandType(commandType)) {
