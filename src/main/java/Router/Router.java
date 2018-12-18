@@ -92,11 +92,14 @@ public class Router {
         ArrayList<Route> routes = getRoutes(clientRequest.getPath());
         ArrayList<String> methods = new ArrayList<>();
 
+        methods.add(Methods.OPTIONS.toString());
+        methods.add(Methods.HEAD.toString());
+
         for (Route route:routes) {
             methods.add(route.getMethod());
         }
 
-        String methodsString = String.join(", ", methods);
+        String methodsString = String.join(",", methods);
         response.addHeader("Allow", methodsString);
         return response;
     }

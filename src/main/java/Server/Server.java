@@ -88,7 +88,7 @@ public class Server {
             } catch (IOException e) {
                 handleError(e.getMessage());
             } finally {
-                dispatcher.process("connection", payload);
+                dispatcher.processWithExecutionService("connection", payload);
             }
 //            acceptConnection(serverListener);
         }

@@ -31,9 +31,14 @@ public class ResponseBuilder {
 //            sb.append(key + ": " + value + "\n");
 //        }
 
-        sb.append("\n" + body + "\n");
+        if (body != null && body.length() > 0 && !body.equals("")) {
+            sb.append("\n");
+            sb.append(body);
+        }
 
         String result = sb.toString();
+        System.out.println("******* ResponseBuilder *******");
+        System.out.println(result);
         return result;
     }
 }

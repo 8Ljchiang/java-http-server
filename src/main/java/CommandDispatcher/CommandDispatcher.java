@@ -30,25 +30,11 @@ public class CommandDispatcher {
     }
 
     public void processWithExecutionService(String commandType, HashMap<String, Object> payload) {
-        if (containsCommandType(commandType)) {
-            System.out.println(" >>> DISPATCHER: PROCESS - " + commandType);
-            ArrayList<ICommandHandlerLambda> commandHandlers = commands.get(commandType);
+        Runnable runnableTask = () -> {
+            process(commandType, payload);
+        };
 
-            Runnable runnableTask = () -> {
-                try {
-                    for (ICommandHandlerLambda handler : commandHandlers) {
-                        handler.operation(payload);
-                    }
-                } catch (Error e) {
-                    e.printStackTrace();
-                }
-            };
-
-            executor.execute(runnableTask);
-
-        } else {
-            System.out.println("DISPATCHER: Invalid - " + commandType);
-        }
+        executor.execute(runnableTask);
     }
 
     public void registerCommandHandler(String commandType, ICommandHandlerLambda commandHandler) {

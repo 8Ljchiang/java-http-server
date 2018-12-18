@@ -23,7 +23,9 @@ public class SocketConnection {
         if (text != null && text.length() > 0) {
             OutputStream os = socket.getOutputStream();
             PrintWriter pw = new PrintWriter(os, true);
-            pw.println(text);
+//            pw.println(text);
+            pw.print(text);
+            pw.close();
         }
     }
 
