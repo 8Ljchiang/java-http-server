@@ -126,6 +126,7 @@ public class Main {
 
         server.on("listen", showServerInfoHandler1);
         server.on("listen", showServerInfoHandler2);
+
         server.listen(port);
     }
 }
