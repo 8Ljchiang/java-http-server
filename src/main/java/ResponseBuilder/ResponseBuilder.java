@@ -37,8 +37,6 @@ public class ResponseBuilder {
         }
 
         String result = sb.toString();
-        System.out.println("******* ResponseBuilder *******");
-        System.out.println(result);
         return result;
     }
 }

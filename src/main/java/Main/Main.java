@@ -100,7 +100,7 @@ public class Main {
         router.post("/", postDefaultRouteController);
         router.get("/index.html", getIndexRouteController);
         router.get("/echo", echoRequestController);
-        router.post("/echo", postEchoRouteController);
+        router.post("/echo", echoRequestController);
 
         router.post("/echo_body", postEchoRouteController);
         router.get("/simple_get",simpleGetController);
@@ -121,11 +121,11 @@ public class Main {
         };
 
         ICommandHandlerLambda showServerInfoHandler2 = (HashMap<String, Object> payload) -> {
-            System.out.println("*2* JAVA-HTTP-SERVER: Listening on port " + port);
+            System.out.println("*2* JAVA-HTTP-SERVER: Completed connection processing.");
         };
 
         server.on("listen", showServerInfoHandler1);
-        server.on("listen", showServerInfoHandler2);
+        server.on("connection", showServerInfoHandler2);
 
         server.listen(port);
     }

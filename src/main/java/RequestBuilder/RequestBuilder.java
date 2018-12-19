@@ -1,12 +1,13 @@
 package RequestBuilder;
 
 import Request.Request;
+import Exception.InvalidRequestStringException;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class RequestBuilder {
-    public static Request createRequest(String requestString) {
+    public static Request createRequest(String requestString) throws InvalidRequestStringException {
         if (isValidRequestString(requestString)) {
             String method = "";
             String path = "";
@@ -32,7 +33,7 @@ public class RequestBuilder {
                 return clientRequest;
             }
         }
-        return null;
+        throw new InvalidRequestStringException("Malformed Request String");
     }
 
     public static String getFirstLine(String[] requestStringArray) {
@@ -94,7 +95,7 @@ public class RequestBuilder {
 
 
     public static Boolean isValidRequestString(String requestString) {
-        String[] requestLines = requestStringToArray(requestString);
+        String[] requestLines = requestStringToArray(requestString.trim());
         if (requestLines != null && requestLines.length > 1) {
             String[] firstLineParts = requestLines[0].split(" ");
 

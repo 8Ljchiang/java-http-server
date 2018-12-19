@@ -2,6 +2,7 @@ package Server;
 
 import CommandDispatcher.CommandDispatcher;
 import CommandHandler.ICommandHandlerLambda;
+import Exception.InvalidRequestStringException;
 import Request.IRequest;
 import RequestBuilder.RequestBuilder;
 import Response.IResponse;
@@ -41,12 +42,13 @@ public class Server {
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("port", port);
         callDispatch("listen", payload);
-//        dispatcher.process("listen", payload);
 
-        try {
-            TimeUnit.MILLISECONDS.sleep(300);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (!isBlocking) {
+            try {
+                TimeUnit.MILLISECONDS.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         acceptClientConnections();
@@ -63,12 +65,9 @@ public class Server {
                 HashMap<String, Object> errorPayload = new HashMap<>();
                 errorPayload.put("error", e.getMessage());
                 callDispatch("error", errorPayload);
-//                handleError(e.getMessage());
             } finally {
                 callDispatch("connection", payload);
-//                dispatcher.processWithExecutionService("connection", payload);
             }
-//            acceptConnection(serverListener);
         }
     }
 
@@ -94,7 +93,6 @@ public class Server {
             HashMap<String, Object> errorPayload = new HashMap<>();
             errorPayload.put("error", e.getMessage());
             callDispatch("error", errorPayload);
-//                handleError(e.getMessage());
         }
     }
 
@@ -105,21 +103,22 @@ public class Server {
     private void handleConnection(Socket socket) {
         SocketConnection socketConnection = new SocketConnection(socket, charset);
 
-        String inputData = receive(socketConnection);
-
-        IResponse response = compute(inputData);
-
-        sendResponse(response, socketConnection);
-
-        closeConnectionWithClient(socketConnection);
-    }
-
-    private String receive(SocketConnection socketConnection) {
-        return readInputData(socketConnection);
-    }
-
-    private IResponse compute(String text) {
-        return routeInputData(text);
+        try {
+            String clientRequestString = readInputData(socketConnection);
+            IRequest clientRequest = RequestBuilder.createRequest(clientRequestString);
+            IResponse response = router.handleRequest(clientRequest);
+            sendResponse(response, socketConnection);
+        } catch (InvalidRequestStringException e) {
+            HashMap<String, Object> errorPayload = new HashMap<>();
+            errorPayload.put("error", e.toString());
+            callDispatch("error", errorPayload);
+        } catch (IOException e) {
+            HashMap<String, Object> errorPayload = new HashMap<>();
+            errorPayload.put("error", e.toString());
+            callDispatch("error", errorPayload);
+        } finally {
+            closeConnectionWithClient(socketConnection);
+        }
     }
 
     private void sendResponse(IResponse response, SocketConnection socketConnection) {
@@ -163,29 +162,11 @@ public class Server {
         }
     }
 
-    private String readInputData(SocketConnection socketConnection) {
-        try {
-            // 3. Read input data from SocketConnection.
-            String clientRequestString = socketConnection.readFromInputStream();
-            logRequest(clientRequestString);
-            return clientRequestString;
-        } catch (IOException e) {
-            HashMap<String, Object> errorPayload = new HashMap<>();
-            errorPayload.put("error", e.getMessage());
-            callDispatch("error", errorPayload);
-//            handleError(e.getMessage());
-            return "";
-        }
-    }
-
-    private IResponse routeInputData(String clientRequestString) {
-        // 4. Parse input data into a Request
-        IRequest clientRequest = RequestBuilder.createRequest(clientRequestString);
-
-        // 5. Router processes Request.
-        // 6. Router Returns a Response.
-        IResponse response = router.handleRequest(clientRequest);
-        return response;
+    private String readInputData(SocketConnection socketConnection) throws IOException {
+        // 3. Read input data from SocketConnection.
+        String clientRequestString = socketConnection.readFromInputStream();
+        logRequest(clientRequestString);
+        return clientRequestString;
     }
 
     private void logClosingSocketInfo() {

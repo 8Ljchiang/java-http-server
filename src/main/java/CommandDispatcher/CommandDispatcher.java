@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-//import java.util.concurrent.TimeUnit;
-
 
 public class CommandDispatcher {
 
@@ -36,7 +34,7 @@ public class CommandDispatcher {
                 handler.operation(payload);
             }
         } else {
-            System.out.println("DISPATCHER: Invalid - " + commandType);
+            System.out.println(">>> DISPATCHER: Invalid - " + commandType);
         }
     }
 
