@@ -11,7 +11,7 @@ import static org.junit.Assert.assertFalse;
 
 public class ConnectionManagerTest {
 
-    private ConnectionManger connectionManger;
+    private ConnectionManager connectionManager;
     private String method = "GET";
     private String path = "/";
     private String protocol = "HTTP/1.1";

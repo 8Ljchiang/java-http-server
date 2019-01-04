@@ -18,7 +18,7 @@ public class ConnectionManager {
         try {
             String dataString = connection.readInputData();
             String protocol = DataParser.getProtocol(dataString);
-            IRequest clientRequest = DataParser.parseData(dataString, protocol);
+            IRequest clientRequest = DataParser.parseDataToRequest(dataString, protocol);
             App app = apps.get(protocol);
             IResponse response = app.handleRequest(clientRequest);
             String responseString = ResponseBuilder.createResponseString(response);
