@@ -1,5 +1,6 @@
 package DataParser;
 
+import Exception.InvalidRequestStringException;
 import Exception.ProtocolNotSupportedException;
 import Request.IRequest;
 import SocketConnection.ISocketConnection;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class DataParser {
+public class DataParserTest {
 
     private String method = "GET";
     private String path = "/";
@@ -25,26 +26,26 @@ public class DataParser {
     private String mockDataString = method + " " + path + " " + protocol + "\n"
             + headers;
 
-    public class MockSocketConnection implements ISocketConnection {
-
-        public String outputData = null;
-        public boolean isClosed = false;
-
-        @Override
-        public String readInputData() throws IOException {
-            return mockDataString;
-        }
-
-        @Override
-        public void sendOutputData(String text) throws IOException {
-            outputData = text;
-        }
-
-        @Override
-        public void closeSocketConnection() throws IOException {
-            isClosed = true;
-        }
-    }
+//    public class MockSocketConnection implements ISocketConnection {
+//
+//        public String outputData = null;
+//        public boolean isClosed = false;
+//
+//        @Override
+//        public String readInputData() throws IOException {
+//            return mockDataString;
+//        }
+//
+//        @Override
+//        public void sendOutputData(String text) throws IOException {
+//            outputData = text;
+//        }
+//
+//        @Override
+//        public void closeSocketConnection() throws IOException {
+//            isClosed = true;
+//        }
+//    }
 
     @Test
     public void testGetProtocolMethod () {
@@ -56,7 +57,7 @@ public class DataParser {
     }
 
     @Test
-    public void testParseDataToRequest() {
+    public void testParseDataToRequest() throws InvalidRequestStringException, ProtocolNotSupportedException {
         String expectedBody = "";
         String expectedPath = path;
         String expectedMethod = method;
@@ -87,9 +88,21 @@ public class DataParser {
     }
 
     @Test (expected = ProtocolNotSupportedException.class)
-    public void testParseDataToRequestWithNonHTTPRequest() throws ProtocolNotSupportedException {
+    public void testParseDataToRequestWithNonHTTPRequest() throws InvalidRequestStringException,ProtocolNotSupportedException {
         String invalidProtocol = "INVALID/1.1";
-        DataParser.parseDataRequest(mockDataString, invalidProtocol);
+
+        IRequest request = DataParser.parseDataToRequest(mockDataString, invalidProtocol);
+
+        // Only for junit 5.
+        //assertThrows(ProtocolNotSupportedException, () -> DataParser.parseDataRequest(mockDataString, protocol));
+    }
+
+    @Test (expected = InvalidRequestStringException.class)
+    public void testParseDataToRequestWithInvalidRequest() throws InvalidRequestStringException, ProtocolNotSupportedException {
+        String invalidProtocol = "INVALID/1.1";
+        String invalidDataString = method + " " + path + " " + invalidProtocol + "\n"
+                + headers;
+        IRequest request = DataParser.parseDataToRequest(invalidDataString, invalidProtocol);
 
         // Only for junit 5.
         //assertThrows(ProtocolNotSupportedException, () -> DataParser.parseDataRequest(mockDataString, protocol));

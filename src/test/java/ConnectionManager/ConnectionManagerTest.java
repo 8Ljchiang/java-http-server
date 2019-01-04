@@ -4,10 +4,10 @@ import SocketConnection.ISocketConnection;
 import org.junit.Before;
 import org.junit.Test;
 
+
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 public class ConnectionManagerTest {
 
@@ -63,5 +63,22 @@ public class ConnectionManagerTest {
 
         // 2. Assert that the connection is also closed.
         assertFalse(((MockSocketConnection) mockClientConnection).isClosed);
+    }
+
+    @Test
+    public final void testRegisterApp() {
+        // Arrange
+        App app = new App();
+        String appKey = "HTTP/1.1";
+
+        // Act
+        connectionManager.registerApp(appKey, app);
+
+        // Assert
+        // 1. Assert that the app object has been added to the hashmap.
+        assertTrue(connectionManager.apps.get(appKey));
+
+        // 2. Assert that the hashmap has the key.
+        assertTrue(connectionManager.apps.containsKey(appKey));
     }
 }

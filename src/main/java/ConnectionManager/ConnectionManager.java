@@ -1,5 +1,6 @@
 package ConnectionManager;
 
+import DataParser.DataParser;
 import Request.IRequest;
 import Response.IResponse;
 import ResponseBuilder.ResponseBuilder;
@@ -13,6 +14,10 @@ public class ConnectionManager {
     HashMap<String, App> apps = new HashMap<>();
 
     public ConnectionManager() { }
+
+    public void registerApp(String appKey, App app) {
+        apps.put(appKey, app);
+    }
 
     public void handleConnection(ISocketConnection connection) {
         try {
