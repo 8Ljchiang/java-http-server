@@ -77,15 +77,7 @@ public class RouterTest {
         int expectedNumOfPaths = 1;
         int expectedNumOfRoutes = 1;
 
-        // Test the creation of a GET route and added to the router.
-//        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
-//            return res;
-//        };
-//
-//        RouteController defaultController = new RouteController(defaultControllerLambda);
         router.get(path, defaultController);
-
-        // Get HashMap of Routes
 
         final Field field = router.getClass().getDeclaredField("routes");
         field.setAccessible(true);

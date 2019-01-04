@@ -1,6 +1,7 @@
 package CommandDispatcher;
 
 import CommandHandler.ICommandHandlerLambda;
+import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +66,7 @@ public class CommandDispatcher {
         executor.shutdown();
     }
 
+    @Contract(pure = true)
     private boolean containsCommandType(String commandType) {
         return commands.containsKey(commandType);
     }

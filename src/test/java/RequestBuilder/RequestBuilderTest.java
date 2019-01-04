@@ -9,6 +9,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.HashMap;
+import Exception.InvalidRequestStringException;
 import Request.Request;
 
 public class RequestBuilderTest {
@@ -27,7 +28,7 @@ public class RequestBuilderTest {
     Request request;
 
     @Before
-    public final void setup() {
+    public final void setup() throws InvalidRequestStringException {
         headers = new HashMap<>();
         headers.put("Content-Type", "text/plain");
         headers.put("host", "localhost:9000");

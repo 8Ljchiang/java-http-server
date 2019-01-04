@@ -127,7 +127,7 @@ public class RouteTest {
     }
 
     @Test
-    public final void testProcess() throws IOException {
+    public final void testProcess() {
         route.process(new RequestMock(), new ResponseMock());
         assertTrue(methodCalls.contains(routeControllerHandleCallString));
     }

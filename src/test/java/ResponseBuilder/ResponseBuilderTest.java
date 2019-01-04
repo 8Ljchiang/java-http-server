@@ -14,8 +14,7 @@ public class ResponseBuilderTest {
         String status = "200 OK";
         String body = "";
         String expectResponseString = protocol + " " + status + "\n"
-                + "Content-Type: text/html\n"
-                + "\n" + body + "\n";
+                + "Content-Type: text/html\n";
 
         IResponse defaultResponse = new Response();
         String resultString = ResponseBuilder.createResponseString(defaultResponse);
@@ -31,7 +30,7 @@ public class ResponseBuilderTest {
         String expectResponseString = protocol + " " + status + "\n"
                 + "Content-Type: application/json\n"
                 + "host: localhost:9000\n"
-                + "\n" + body + "\n";
+                + "\n" + body;
 
         IResponse defaultResponse = new Response();
         defaultResponse.addHeader("host", "localhost:9000");

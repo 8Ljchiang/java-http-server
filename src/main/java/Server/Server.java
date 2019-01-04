@@ -31,6 +31,7 @@ public class Server {
         this.router = router;
         this.isBlocking = isBlocking;
         this.dispatcher = new CommandDispatcher(maxThreads);
+//        this.serverListener = something here
         init();
     }
 
@@ -100,7 +101,7 @@ public class Server {
         System.out.println(" [[[ Error: " + errorMessage + " ]]] ");
     }
 
-    private void handleConnection(Socket socket) {
+    private void handleConnection(Socket socket)  {
         SocketConnection socketConnection = new SocketConnection(socket, charset);
 
         try {
