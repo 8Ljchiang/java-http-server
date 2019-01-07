@@ -1,5 +1,7 @@
 package ConnectionManager;
 
+import RequestProcessor.RequestProcessor;
+import Router.Router;
 import SocketConnection.ISocketConnection;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,17 +70,18 @@ public class ConnectionManagerTest {
     @Test
     public final void testRegisterApp() {
         // Arrange
-        App app = new App();
-        String appKey = "HTTP/1.1";
+        Router router = new Router();
+        RequestProcessor requestProcessor = new RequestProcessor(router);
+        String requestProtocol = "HTTP/1.1";
 
         // Act
-        connectionManager.registerApp(appKey, app);
+        connectionManager.registerRequestProcessor(requestProtocol, requestProcessor);
 
         // Assert
-        // 1. Assert that the app object has been added to the hashmap.
-        assertTrue(connectionManager.apps.get(appKey));
+        // 1. Assert that the hashmap has the key.
+        assertTrue(connectionManager.requestProcessors.containsKey(requestProtocol));
 
-        // 2. Assert that the hashmap has the key.
-        assertTrue(connectionManager.apps.containsKey(appKey));
+        // 2. Assert that the app object has been added to the hashmap.
+        assertTrue(connectionManager.requestProcessors.get(requestProtocol) instanceof RequestProcessor);
     }
 }

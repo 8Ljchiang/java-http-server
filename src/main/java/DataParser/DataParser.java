@@ -21,8 +21,7 @@ public class DataParser {
     public static IRequest parseDataToRequest(String dataString, String protocol) throws InvalidRequestStringException, ProtocolNotSupportedException {
         switch(protocol) {
             case "HTTP/1.1":
-                RequestBuilder.createRequest(dataString);
-                break;
+                return RequestBuilder.createRequest(dataString);
             default:
                 throw new ProtocolNotSupportedException("Request protocol not supported");
         }

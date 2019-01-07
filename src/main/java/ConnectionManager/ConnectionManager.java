@@ -2,21 +2,21 @@ package ConnectionManager;
 
 import DataParser.DataParser;
 import Request.IRequest;
+import RequestProcessor.RequestProcessor;
 import Response.IResponse;
 import ResponseBuilder.ResponseBuilder;
 import SocketConnection.ISocketConnection;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 public class ConnectionManager {
 
-    HashMap<String, App> apps = new HashMap<>();
+    public HashMap<String, RequestProcessor> requestProcessors = new HashMap<>();
 
     public ConnectionManager() { }
 
-    public void registerApp(String appKey, App app) {
-        apps.put(appKey, app);
+    public void registerRequestProcessor(String requestProtocol, RequestProcessor requestProcessor) {
+        requestProcessors.put(requestProtocol, requestProcessor);
     }
 
     public void handleConnection(ISocketConnection connection) {
@@ -24,8 +24,14 @@ public class ConnectionManager {
             String dataString = connection.readInputData();
             String protocol = DataParser.getProtocol(dataString);
             IRequest clientRequest = DataParser.parseDataToRequest(dataString, protocol);
-            App app = apps.get(protocol);
-            IResponse response = app.handleRequest(clientRequest);
+
+
+            // Get the request processor for the type of request.
+            // Then process the request.
+            RequestProcessor requestProcessor = requestProcessors.get(protocol);
+            IResponse response = requestProcessor.processRequest(clientRequest);
+
+
             String responseString = ResponseBuilder.createResponseString(response);
             connection.sendOutputData(responseString);
             connection.closeSocketConnection();
