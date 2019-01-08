@@ -4,8 +4,6 @@ import Request.IRequest;
 import Response.IResponse;
 import RouteController.IRouteController;
 
-import java.io.IOException;
-
 public class Route {
     private String method;
     private String path;

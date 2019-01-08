@@ -1,10 +1,8 @@
 package Response;
 
-import SocketConnection.ISocketConnection;
-
 import java.util.HashMap;
 
-public class Response implements IResponse{
+public class Response implements IResponse {
     private String status = "200 OK";
     private String protocol = "HTTP/1.1";
     private String type = "text/html";

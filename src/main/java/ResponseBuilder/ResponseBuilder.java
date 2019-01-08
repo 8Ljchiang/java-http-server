@@ -25,12 +25,6 @@ public class ResponseBuilder {
             sb.append(headerField + ": " + headerFieldValue + "\n");
         }
 
-//        for (HashMap.Entry<String, String> entry : headers.entrySet()) {
-//            String key = entry.getKey();
-//            String value = entry.getValue();
-//            sb.append(key + ": " + value + "\n");
-//        }
-
         if (body != null && body.length() > 0 && !body.equals("")) {
             sb.append("\n");
             sb.append(body);

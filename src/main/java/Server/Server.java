@@ -31,7 +31,12 @@ public class Server {
         this.router = router;
         this.isBlocking = isBlocking;
         this.dispatcher = new CommandDispatcher(maxThreads);
-//        this.serverListener = something here
+        init();
+    }
+
+    public Server(Router router, CommandDispatcher dispatcher) {
+        this.router = router;
+        this.dispatcher = dispatcher;
         init();
     }
 
@@ -56,7 +61,9 @@ public class Server {
     }
 
     private void acceptClientConnections() {
-        while (true) {
+//        CancelTokenType cancelationToken = New CancelTokenType(true);
+        boolean cancelationToken = true;
+        while (cancelationToken) {
             // 2. Accept SocketConnection(s).
             HashMap<String, Object> payload = new HashMap<>();
             try {

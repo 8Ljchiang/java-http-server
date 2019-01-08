@@ -6,6 +6,7 @@ import Response.Response;
 import Response.IResponse;
 import Route.Route;
 import RouteController.RouteController;
+import RouteController.IRouteController;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class Router {
 
     public Router() {}
 
-    public void use(String method, String path, RouteController controller) {
+    public void use(String method, String path, IRouteController controller) {
         Route newRoute = new Route(method, path, controller);
         if (routes.get(path) == null ) {
             ArrayList<Route> routeArray = new ArrayList<Route>();
@@ -29,22 +30,22 @@ public class Router {
         }
     }
 
-    public void get(String path, RouteController controller) {
+    public void get(String path, IRouteController controller) {
         String method = Methods.GET.toString();
         use(method, path, controller);
     }
 
-    public void put(String path, RouteController controller) {
+    public void put(String path, IRouteController controller) {
         String method = Methods.PUT.toString();
         use(method, path, controller);
     }
 
-    public void post(String path, RouteController controller) {
+    public void post(String path, IRouteController controller) {
         String method = Methods.POST.toString();
         use(method, path, controller);
     }
 
-    public void delete(String path, RouteController controller) {
+    public void delete(String path, IRouteController controller) {
         String method = Methods.DELETE.toString();
         use(method, path, controller);
     }
@@ -175,3 +176,4 @@ public class Router {
                 && (path != null && path.length() > 0);
     }
 }
+

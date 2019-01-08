@@ -4,11 +4,11 @@ import CommandHandler.ICommandHandlerLambda;
 import Request.IRequest;
 import Response.IResponse;
 import RouteController.IRouteControllerLambda;
+import RouteController.IRouteController;
 import RouteController.RouteController;
 import Router.Router;
 import Server.Server;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 public class Main {
@@ -124,6 +124,7 @@ public class Main {
             System.out.println("*2* JAVA-HTTP-SERVER: Completed connection processing.");
         };
 
+        String names = "listen, close, error, connection";
         server.on("listen", showServerInfoHandler1);
         server.on("connection", showServerInfoHandler2);
 
