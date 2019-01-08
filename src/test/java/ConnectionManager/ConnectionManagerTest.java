@@ -52,7 +52,7 @@ public class ConnectionManagerTest {
 
 
     @Test
-    public final void testHandleMethod() {
+    public final void testHandleMethod() throws IOException {
         // Arrange
         ISocketConnection mockClientConnection = new MockSocketConnection();
 
@@ -61,7 +61,7 @@ public class ConnectionManagerTest {
 
         // Assert
         // 1. Assert that data was sent back to the connection.
-        assertEquals(mockDataString, ((MockSocketConnection) mockClientConnection).outputData);
+        assertEquals(mockDataString, ((MockSocketConnection) mockClientConnection).readInputData());
 
         // 2. Assert that the connection is also closed.
         assertFalse(((MockSocketConnection) mockClientConnection).isClosed);

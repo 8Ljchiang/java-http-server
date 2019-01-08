@@ -46,7 +46,7 @@ public class RequestBuilder {
             boolean isDone = false;
             int lineIndex = 1;
 
-            while (!isDone) {
+            while (!isDone && lineIndex < requestStringArray.length) {
                 String line = requestStringArray[lineIndex];
 
                 if (line != null && line.length() > 3 && !isDividerLine(line)) {

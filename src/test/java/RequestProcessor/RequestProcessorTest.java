@@ -8,7 +8,7 @@ import RouteController.IRouteController;
 import RouteController.IRouteControllerLambda;
 import RouteController.RouteController;
 import Router.Router;
-import com.intellij.util.io.HttpRequests;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,9 +26,6 @@ public class RequestProcessorTest {
     private String headerValue1 = "defaultHandler";
     private String headerField2 = "Content-Type";
     private String headerValue2 = "application/json";
-//    private String expectedResponseMethod = "GET";
-//    private String expectedResponsePath = "/";
-//    private String expectedResponseProtocol = "HTTP/1.1";
 
     @Before
     public void setup() {
@@ -74,8 +71,8 @@ public class RequestProcessorTest {
 
         assertEquals(2, response.getHeaders().size());
         assertTrue(response.getHeaders().containsKey(headerField1));
-        assertEquals(headerValue1, response.getHeaders().containsKey(headerField1));
+        assertEquals(headerValue1, response.getHeaders().get(headerField1));
         assertTrue(response.getHeaders().containsKey(headerField2));
-        assertEquals(headerValue2, response.getHeaders().containsKey(headerField2));
+        assertEquals(headerValue2, response.getHeaders().get(headerField2));
     }
 }

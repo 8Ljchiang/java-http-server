@@ -25,20 +25,14 @@ public class ConnectionManager {
             String protocol = DataParser.getProtocol(dataString);
             IRequest clientRequest = DataParser.parseDataToRequest(dataString, protocol);
 
-
-            // Get the request processor for the type of request.
-            // Then process the request.
             RequestProcessor requestProcessor = requestProcessors.get(protocol);
             IResponse response = requestProcessor.processRequest(clientRequest);
-
 
             String responseString = ResponseBuilder.createResponseString(response);
             connection.sendOutputData(responseString);
             connection.closeSocketConnection();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        } finally {
-            System.out.println("End of handleConnection()");
+            System.out.println("Error: " + ex.getMessage());
         }
     }
 }

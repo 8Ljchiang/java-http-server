@@ -28,14 +28,11 @@ public class CommandDispatcher {
 
     public void process(String commandType, HashMap<String, Object> payload) {
         if (containsCommandType(commandType)) {
-            System.out.println(" >>> DISPATCHER: PROCESS - " + commandType);
             ArrayList<ICommandHandlerLambda> commandHandlers = commands.get(commandType);
 
             for (ICommandHandlerLambda handler : commandHandlers) {
                 handler.operation(payload);
             }
-        } else {
-            System.out.println(">>> DISPATCHER: Invalid - " + commandType);
         }
     }
 

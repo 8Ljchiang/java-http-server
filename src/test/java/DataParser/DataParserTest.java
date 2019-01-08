@@ -26,27 +26,6 @@ public class DataParserTest {
     private String mockDataString = method + " " + path + " " + protocol + "\n"
             + headers;
 
-//    public class MockSocketConnection implements ISocketConnection {
-//
-//        public String outputData = null;
-//        public boolean isClosed = false;
-//
-//        @Override
-//        public String readInputData() throws IOException {
-//            return mockDataString;
-//        }
-//
-//        @Override
-//        public void sendOutputData(String text) throws IOException {
-//            outputData = text;
-//        }
-//
-//        @Override
-//        public void closeSocketConnection() throws IOException {
-//            isClosed = true;
-//        }
-//    }
-
     @Test
     public void testGetProtocolMethod () {
         String expectedProtocol = "HTTP/1.1";
@@ -84,7 +63,7 @@ public class DataParserTest {
         assertTrue(clientRequest.getHeaders().containsKey("Accept"));
         assertEquals(host, clientRequest.getHeader("Host"));
         assertEquals(userAgent, clientRequest.getHeader("User-Agent"));
-        assertEquals("*/*", clientRequest.getHeader("Access"));
+        assertEquals("*/*", clientRequest.getHeader("Accept"));
     }
 
     @Test (expected = ProtocolNotSupportedException.class)
@@ -99,8 +78,10 @@ public class DataParserTest {
 
     @Test (expected = InvalidRequestStringException.class)
     public void testParseDataToRequestWithInvalidRequest() throws InvalidRequestStringException, ProtocolNotSupportedException {
-        String invalidProtocol = "INVALID/1.1";
-        String invalidDataString = method + " " + path + " " + invalidProtocol + "\n"
+        String invalidProtocol = "HTTP/1.1";
+        String invalidPath = "invalid";
+        String invalidMethod = "INVALID";
+        String invalidDataString = invalidMethod + " " + invalidPath + " " + protocol + "\n"
                 + headers;
         IRequest request = DataParser.parseDataToRequest(invalidDataString, invalidProtocol);
 

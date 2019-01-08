@@ -14,14 +14,14 @@ import java.util.HashMap;
 public class Main {
 
     public static void main(String[] args) {
-        IRouteControllerLambda postDefaultHandler = (IRequest req, IResponse res) -> {
+        IRouteController postDefaultHandler = (IRequest req, IResponse res) -> {
             String result = req.getBody();
             res.addHeader("Content-Type", "application/json");
             res.setBody("{ \"response\" : \"" + result.trim() + "\" }");
             return res;
         };
 
-        IRouteControllerLambda getIndexHandler = (IRequest req, IResponse res) -> {
+        IRouteController getIndexHandler = (IRequest req, IResponse res) -> {
             String htmlResponse = "<!DOCTYPE HTML PUBLIC>\n" +
                     "<html>\n" +
                     "<head>\n" +
@@ -43,74 +43,74 @@ public class Main {
             return res;
         };
 
-        IRouteControllerLambda getDefaultHandler = (IRequest req, IResponse res) -> {
+        IRouteController getDefaultHandler = (IRequest req, IResponse res) -> {
             res.addHeader("Content-Type", "application/json");
             res.setStatus("200 OK");
             res.setBody("{ \"response\" : \"hello world\" }");
             return res;
         };
 
-        IRouteControllerLambda echoRequestHandler = (IRequest req, IResponse res) -> {
+        IRouteController echoRequestHandler = (IRequest req, IResponse res) -> {
             res.addHeader("Content-Type", "application/json");
             res.setBody("{ \"response\" : \"" + req.getRequestString() + "\" }");
             return res;
         };
 
-        IRouteControllerLambda postEchoHandler = (IRequest req, IResponse res) -> {
+        IRouteController postEchoHandler = (IRequest req, IResponse res) -> {
             res.addHeader("Content-Type", req.getHeader("Content-Type"));
             res.setBody(req.getBody().trim());
             return res;
         };
 
-        IRouteControllerLambda simpleGetHandler = (IRequest req, IResponse res) -> {
+        IRouteController simpleGetHandler = (IRequest req, IResponse res) -> {
             return res;
         };
 
-        IRouteControllerLambda getWithBodyHandler = (IRequest req, IResponse res) -> {
+        IRouteController getWithBodyHandler = (IRequest req, IResponse res) -> {
             return res;
         };
 
-        IRouteControllerLambda methodOptions2Handler = (IRequest req, IResponse res) -> {
+        IRouteController methodOptions2Handler = (IRequest req, IResponse res) -> {
             return res;
         };
 
-        IRouteControllerLambda methodOptionsHandler = (IRequest req, IResponse res) -> {
+        IRouteController methodOptionsHandler = (IRequest req, IResponse res) -> {
             return res;
         };
 
-        IRouteControllerLambda redirectHandler = (IRequest req, IResponse res) -> {
+        IRouteController redirectHandler = (IRequest req, IResponse res) -> {
             res.setStatus("301 Moved Permanently");
             res.addHeader("Location", "http://0.0.0.0:5000/simple_get");
             return res;
         };
 
-        RouteController getDefaultRouteController = new RouteController(getDefaultHandler);
-        RouteController postDefaultRouteController = new RouteController(postDefaultHandler);
-        RouteController echoRequestController = new RouteController(echoRequestHandler);
-        RouteController postEchoRouteController = new RouteController(postEchoHandler);
-        RouteController getIndexRouteController = new RouteController(getIndexHandler);
-        RouteController simpleGetController = new RouteController(simpleGetHandler);
-        RouteController methodOptions2Controller = new RouteController(methodOptions2Handler);
-        RouteController methodOptionsController = new RouteController(methodOptionsHandler);
-        RouteController redirectController = new RouteController(redirectHandler);
-        RouteController getWithBodyController = new RouteController(getWithBodyHandler);
+//        RouteController getDefaultRouteController = new RouteController(getDefaultHandler);
+//        RouteController postDefaultRouteController = new RouteController(postDefaultHandler);
+//        RouteController echoRequestController = new RouteController(echoRequestHandler);
+//        RouteController postEchoRouteController = new RouteController(postEchoHandler);
+//        RouteController getIndexRouteController = new RouteController(getIndexHandler);
+//        RouteController simpleGetController = new RouteController(simpleGetHandler);
+//        RouteController methodOptions2Controller = new RouteController(methodOptions2Handler);
+//        RouteController methodOptionsController = new RouteController(methodOptionsHandler);
+//        RouteController redirectController = new RouteController(redirectHandler);
+//        RouteController getWithBodyController = new RouteController(getWithBodyHandler);
 
         Router router = new Router();
-        router.get("/", getDefaultRouteController);
-        router.post("/", postDefaultRouteController);
-        router.get("/index.html", getIndexRouteController);
-        router.get("/echo", echoRequestController);
-        router.post("/echo", echoRequestController);
+        router.get("/", getDefaultHandler);
+        router.post("/", postDefaultHandler);
+        router.get("/index.html", getIndexHandler);
+        router.get("/echo", echoRequestHandler);
+        router.post("/echo", echoRequestHandler);
 
-        router.post("/echo_body", postEchoRouteController);
-        router.get("/simple_get",simpleGetController);
-        router.get("/get_with_body", getWithBodyController);
-        router.get("/method_options", methodOptionsController);
+        router.post("/echo_body", postEchoHandler);
+        router.get("/simple_get",simpleGetHandler);
+        router.get("/get_with_body", getWithBodyHandler);
+        router.get("/method_options", methodOptionsHandler);
 
-        router.get("/method_options2", methodOptions2Controller);
-        router.put("/method_options2", methodOptions2Controller);
-        router.post("/method_options2", methodOptions2Controller);
-        router.get("/redirect", redirectController);
+        router.get("/method_options2", methodOptions2Handler);
+        router.put("/method_options2", methodOptions2Handler);
+        router.post("/method_options2", methodOptions2Handler);
+        router.get("/redirect", redirectHandler);
 
 
         int port = 5000;
