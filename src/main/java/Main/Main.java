@@ -1,15 +1,16 @@
 package Main;
 
 import CommandHandler.ICommandHandlerLambda;
-import Request.IRequest;
-import Response.IResponse;
-import RouteController.IRouteControllerLambda;
-import RouteController.IRouteController;
-import RouteController.RouteController;
-import Router.Router;
-import Server.Server;
+import com.github.chiangj8L.WebServer.Command.Command;
+import com.github.chiangj8L.WebServer.Request.IRequest;
+import com.github.chiangj8L.WebServer.Response.IResponse;
+import com.github.chiangj8L.WebServer.RouteController.IRouteController;
+import com.github.chiangj8L.WebServer.Router.Router;
+import com.github.chiangj8L.WebServer.Server.Server;
 
 import java.util.HashMap;
+
+import static com.github.chiangj8L.WebServer.HttpStatus.HttpStatus.*;
 
 public class Main {
 
@@ -45,7 +46,7 @@ public class Main {
 
         IRouteController getDefaultHandler = (IRequest req, IResponse res) -> {
             res.addHeader("Content-Type", "application/json");
-            res.setStatus("200 OK");
+            res.setStatus(OK.getStatusCode() + " " + OK.getStatusDescription());
             res.setBody("{ \"response\" : \"hello world\" }");
             return res;
         };
@@ -79,21 +80,10 @@ public class Main {
         };
 
         IRouteController redirectHandler = (IRequest req, IResponse res) -> {
-            res.setStatus("301 Moved Permanently");
+            res.setStatus(MOVED_PERMANENTLY.getStatusCode() + " " + MOVED_PERMANENTLY.getStatusDescription());
             res.addHeader("Location", "http://0.0.0.0:5000/simple_get");
             return res;
         };
-
-//        RouteController getDefaultRouteController = new RouteController(getDefaultHandler);
-//        RouteController postDefaultRouteController = new RouteController(postDefaultHandler);
-//        RouteController echoRequestController = new RouteController(echoRequestHandler);
-//        RouteController postEchoRouteController = new RouteController(postEchoHandler);
-//        RouteController getIndexRouteController = new RouteController(getIndexHandler);
-//        RouteController simpleGetController = new RouteController(simpleGetHandler);
-//        RouteController methodOptions2Controller = new RouteController(methodOptions2Handler);
-//        RouteController methodOptionsController = new RouteController(methodOptionsHandler);
-//        RouteController redirectController = new RouteController(redirectHandler);
-//        RouteController getWithBodyController = new RouteController(getWithBodyHandler);
 
         Router router = new Router();
         router.get("/", getDefaultHandler);
@@ -124,9 +114,8 @@ public class Main {
             System.out.println("*2* JAVA-HTTP-SERVER: Completed connection processing.");
         };
 
-        String names = "listen, close, error, connection";
-        server.on("listen", showServerInfoHandler1);
-        server.on("connection", showServerInfoHandler2);
+        server.on(Command.LISTEN, showServerInfoHandler1);
+        server.on(Command.CONNECTION, showServerInfoHandler2);
 
         server.listen(port);
     }

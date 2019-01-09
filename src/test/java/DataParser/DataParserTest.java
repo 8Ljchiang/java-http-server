@@ -1,13 +1,11 @@
 package DataParser;
 
-import Exception.InvalidRequestStringException;
-import Exception.ProtocolNotSupportedException;
-import Request.IRequest;
-import SocketConnection.ISocketConnection;
+import com.github.chiangj8L.WebServer.Exception.InvalidRequestStringException;
+import com.github.chiangj8L.WebServer.Exception.ProtocolNotSupportedException;
+import com.github.chiangj8L.WebServer.Request.IRequest;
 
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;

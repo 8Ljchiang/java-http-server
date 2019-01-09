@@ -1,9 +1,9 @@
 package DataParser;
 
-import Exception.InvalidRequestStringException;
-import Exception.ProtocolNotSupportedException;
-import Request.IRequest;
-import RequestBuilder.RequestBuilder;
+import com.github.chiangj8L.WebServer.Exception.InvalidRequestStringException;
+import com.github.chiangj8L.WebServer.Exception.ProtocolNotSupportedException;
+import com.github.chiangj8L.WebServer.Request.IRequest;
+import com.github.chiangj8L.WebServer.RequestBuilder.RequestBuilder;
 
 public class DataParser {
 
@@ -23,7 +23,7 @@ public class DataParser {
             case "HTTP/1.1":
                 return RequestBuilder.createRequest(dataString);
             default:
-                throw new ProtocolNotSupportedException("Request protocol not supported");
+                throw new ProtocolNotSupportedException("com.github.chiangj8L.WebServer.Request protocol not supported");
         }
     }
 
