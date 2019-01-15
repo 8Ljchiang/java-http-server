@@ -49,4 +49,3 @@ public class SocketConnection {
         return out.toString();
     }
 }
-

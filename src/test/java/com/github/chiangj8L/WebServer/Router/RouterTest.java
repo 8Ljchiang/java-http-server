@@ -1,13 +1,14 @@
 package com.github.chiangj8L.WebServer.Router;
 
-import com.github.chiangj8L.WebServer.Request.Request;
+import com.github.chiangj8L.WebServer.HttpStatus.HttpStatus;
+import com.github.chiangj8L.WebServer.Methods.Methods;
 import com.github.chiangj8L.WebServer.Request.IRequest;
+import com.github.chiangj8L.WebServer.Request.Request;
 import com.github.chiangj8L.WebServer.Response.IResponse;
 import com.github.chiangj8L.WebServer.Response.Response;
 import com.github.chiangj8L.WebServer.Route.Route;
 import com.github.chiangj8L.WebServer.RouteController.IRouteControllerLambda;
 import com.github.chiangj8L.WebServer.RouteController.RouteController;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,16 +35,10 @@ public class RouterTest {
     @Test
     public final void testUse() throws IllegalAccessException, NoSuchFieldException {
         String path = "/";
-        String expectedMethod = com.github.chiangj8L.WebServer.Methods.GET.toString();
+        String expectedMethod = Methods.GET.toString();
         int expectedNumOfPaths = 1;
         int expectedNumOfRoutes = 1;
 
-        // Test the creation of a GET route and added to the router.
-//        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
-//            return res;
-//        };
-//
-//        com.github.chiangj8L.WebServer.RouteController defaultController = new com.github.chiangj8L.WebServer.RouteController(defaultControllerLambda);
         router.use(expectedMethod, path, defaultController);
 
         // Get HashMap of Routes
@@ -72,7 +67,7 @@ public class RouterTest {
     @Test
     public final void testGet() throws IllegalAccessException, NoSuchFieldException {
         String path = "/";
-        String expectedMethod = com.github.chiangj8L.WebServer.Methods.GET.toString();
+        String expectedMethod = Methods.GET.toString();
         int expectedNumOfPaths = 1;
         int expectedNumOfRoutes = 1;
 
@@ -102,16 +97,10 @@ public class RouterTest {
     @Test
     public final void testPut() throws IllegalAccessException, NoSuchFieldException {
         String path = "/";
-        String expectedMethod = com.github.chiangj8L.WebServer.Methods.PUT.toString();
+        String expectedMethod = Methods.PUT.toString();
         int expectedNumOfPaths = 1;
         int expectedNumOfRoutes = 1;
 
-        // Test the creation of a GET route and added to the router.
-//        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
-//            return res;
-//        };
-//
-//        com.github.chiangj8L.WebServer.RouteController defaultController = new com.github.chiangj8L.WebServer.RouteController(defaultControllerLambda);
         router.put(path, defaultController);
 
         // Get HashMap of Routes
@@ -140,16 +129,10 @@ public class RouterTest {
     @Test
     public final void testPost() throws IllegalAccessException, NoSuchFieldException {
         String path = "/";
-        String expectedMethod = com.github.chiangj8L.WebServer.Methods.POST.toString();
+        String expectedMethod = Methods.POST.toString();
         int expectedNumOfPaths = 1;
         int expectedNumOfRoutes = 1;
 
-        // Test the creation of a GET route and added to the router.
-//        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
-//            return res;
-//        };
-//
-//        com.github.chiangj8L.WebServer.RouteController defaultController = new com.github.chiangj8L.WebServer.RouteController(defaultControllerLambda);
         router.post(path, defaultController);
 
         // Get HashMap of Routes
@@ -178,16 +161,10 @@ public class RouterTest {
     @Test
     public final void testDelete() throws IllegalAccessException, NoSuchFieldException {
         String path = "/";
-        String expectedMethod = com.github.chiangj8L.WebServer.Methods.DELETE.toString();
+        String expectedMethod = Methods.DELETE.toString();
         int expectedNumOfPaths = 1;
         int expectedNumOfRoutes = 1;
 
-        // Test the creation of a GET route and added to the router.
-//        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
-//            return res;
-//        };
-//
-//        com.github.chiangj8L.WebServer.RouteController defaultController = new com.github.chiangj8L.WebServer.RouteController(defaultControllerLambda);
         router.delete(path, defaultController);
 
         // Get HashMap of Routes
@@ -217,20 +194,14 @@ public class RouterTest {
     public final void testMultiRouteCreation() throws IllegalAccessException, NoSuchFieldException {
         String path1 = "/";
         String path2 = "/other";
-        String expectedMethod1 = com.github.chiangj8L.WebServer.Methods.GET.toString();
-        String expectedMethod2 = com.github.chiangj8L.WebServer.Methods.PUT.toString();
-        String expectedMethod3 = com.github.chiangj8L.WebServer.Methods.POST.toString();
-        String expectedMethod4 = com.github.chiangj8L.WebServer.Methods.DELETE.toString();
+        String expectedMethod1 = Methods.GET.toString();
+        String expectedMethod2 = Methods.PUT.toString();
+        String expectedMethod3 = Methods.POST.toString();
+        String expectedMethod4 = Methods.DELETE.toString();
 
         int expectedNumOfPaths = 2;
         int expectedNumOfRoutes = 4;
 
-        // Test the creation of a GET route and added to the router.
-//        IRouteControllerLambda defaultControllerLambda = (IRequest req, IResponse res) -> {
-//            return res;
-//        };
-//
-//        com.github.chiangj8L.WebServer.RouteController defaultController = new com.github.chiangj8L.WebServer.RouteController(defaultControllerLambda);
         router.get(path1, defaultController);
         router.put(path1, defaultController);
         router.post(path1, defaultController);
@@ -283,7 +254,7 @@ public class RouterTest {
 
     @Test
     public final void testHandleRequestValidGet() {
-        String method = com.github.chiangj8L.WebServer.Methods.GET.toString();
+        String method = Methods.GET.toString();
         String path = "/";
         String protocol = "HTTP/1.1";
         String body = "";
@@ -348,7 +319,7 @@ public class RouterTest {
         // Check for valid object.
         assertNotNull(response);
         assertTrue(response instanceof Response);
-        defaultResponse.setStatus("400 Bad com.github.chiangj8L.WebServer.Request");
+        defaultResponse.setStatus(HttpStatus.BAD_REQUEST.getStatusCode() + " " + HttpStatus.BAD_REQUEST.getStatusDescription());
 
         // Check for valid fields.
         assertEquals(defaultResponse.getBody(), response.getBody());
@@ -385,7 +356,7 @@ public class RouterTest {
 
         IResponse response = router.handleRequest(request);
         Response defaultResponse = new Response();
-        defaultResponse.setStatus("400 Bad com.github.chiangj8L.WebServer.Request");
+        defaultResponse.setStatus(HttpStatus.BAD_REQUEST.getStatusCode() + " " + HttpStatus.BAD_REQUEST.getStatusDescription());
 
         // Check for valid object.
         assertNotNull(response);
@@ -426,7 +397,7 @@ public class RouterTest {
 
         IResponse response = router.handleRequest(request);
         Response defaultResponse = new Response();
-        defaultResponse.setStatus("400 Bad com.github.chiangj8L.WebServer.Request");
+        defaultResponse.setStatus(HttpStatus.BAD_REQUEST.getStatusCode() + " " + HttpStatus.BAD_REQUEST.getStatusDescription());
 
         // Check for valid object.
         assertNotNull(response);
@@ -443,21 +414,6 @@ public class RouterTest {
         assertTrue(responseHeaders.containsKey("Content-Type"));
         assertEquals("text/html", responseHeaders.get("Content-Type"));
     }
-
-//    @Test
-//    public final void testHandleRequestValidPut() {
-//
-//    }
-//
-//    @Test
-//    public final void testHandleRequestValidPost() {
-//
-//    }
-//
-//    @Test
-//    public final void testHandleRequestValidDelete() {
-//
-//    }
 
     @Test
     public final void testHandleRequestOptions() {

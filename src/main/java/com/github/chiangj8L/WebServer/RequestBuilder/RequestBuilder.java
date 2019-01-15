@@ -6,7 +6,13 @@ import com.github.chiangj8L.WebServer.Request.Request;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import static com.github.chiangj8L.WebServer.Methods.Methods.*;
+
 public class RequestBuilder {
+
+    private static String pathDivider = "/";
+    private static String httpFirstLineDivider = " ";
+
     public static Request createRequest(String requestString) throws InvalidRequestStringException {
         if (isValidRequestString(requestString)) {
             String method = "";
@@ -19,7 +25,7 @@ public class RequestBuilder {
             String firstLine = getFirstLine(requestStringArray);
 
             if (firstLine != null && firstLine.length() > 0) {
-                String[] firstLineParts = firstLine.split(" ");
+                String[] firstLineParts = firstLine.split(httpFirstLineDivider);
                 method = firstLineParts[0];
                 path = firstLineParts[1];
                 type = firstLineParts[2];
@@ -33,7 +39,7 @@ public class RequestBuilder {
                 return clientRequest;
             }
         }
-        throw new InvalidRequestStringException("Malformed com.github.chiangj8L.WebServer.Request String");
+        throw new InvalidRequestStringException("Malformed Request");
     }
 
     public static String getFirstLine(String[] requestStringArray) {
@@ -97,14 +103,14 @@ public class RequestBuilder {
     public static Boolean isValidRequestString(String requestString) {
         String[] requestLines = requestStringToArray(requestString.trim());
         if (requestLines != null && requestLines.length > 1) {
-            String[] firstLineParts = requestLines[0].split(" ");
+            String[] firstLineParts = requestLines[0].split(httpFirstLineDivider);
 
             if (firstLineParts.length == 3) {
                 String method = firstLineParts[0];
                 String path = firstLineParts[1];
                 String type = firstLineParts[2].split("/")[0];
 
-                String[] validMethods = new String[] {"GET", "HEAD", "PUT", "POST", "OPTIONS", "DELETE"};
+                String[] validMethods = new String[] {GET.toString(), HEAD.toString(), PUT.toString(), POST.toString(), OPTIONS.toString(), DELETE.toString()};
 
                 return Arrays.asList(validMethods).contains(method) && path.length() > 0 && type.equals("HTTP");
             }

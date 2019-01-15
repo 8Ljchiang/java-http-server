@@ -1,4 +1,6 @@
-package CommandHandler;
+package com.github.chiangj8L.WebServer.CommandHandler;
+
+import com.github.chiangj8L.WebServer.CommandPayloadType.CommandPayloadType;
 
 import java.util.HashMap;
 
@@ -10,7 +12,7 @@ public class CommandHandler {
         this.lambdaFunction = lambdaFunc;
     }
 
-    public void execute(HashMap<String, Object> payload) {
+    public void execute(HashMap<CommandPayloadType, Object> payload) {
         this.lambdaFunction.operation(payload);
     }
 }

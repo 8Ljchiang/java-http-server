@@ -46,9 +46,4 @@ public class Request implements IRequest {
     public String getRequestString() {
         return requestString;
     }
-
-
-//    public Boolean isValid() {
-//        return (method.equals("GET") || method.equals("PUT") || method.equals("POST") || method.equals("DELETE") || method.equals("")) && (path != null && path.length() > 0);
-//    }
 }

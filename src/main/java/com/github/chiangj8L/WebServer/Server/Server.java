@@ -1,9 +1,10 @@
 package com.github.chiangj8L.WebServer.Server;
 
-import CommandHandler.ICommandHandlerLambda;
 import com.github.chiangj8L.WebServer.Command.Command;
-import com.github.chiangj8L.WebServer.Exception.InvalidRequestStringException;
 import com.github.chiangj8L.WebServer.CommandDispatcher.CommandDispatcher;
+import com.github.chiangj8L.WebServer.CommandHandler.ICommandHandlerLambda;
+import com.github.chiangj8L.WebServer.CommandPayloadType.CommandPayloadType;
+import com.github.chiangj8L.WebServer.Exception.InvalidRequestStringException;
 import com.github.chiangj8L.WebServer.Request.IRequest;
 import com.github.chiangj8L.WebServer.RequestBuilder.RequestBuilder;
 import com.github.chiangj8L.WebServer.Response.IResponse;
@@ -46,8 +47,8 @@ public class Server {
     }
 
     public void listen(int port) {
-        HashMap<String, Object> payload = new HashMap<>();
-        payload.put("port", port);
+        HashMap<CommandPayloadType, Object> payload = new HashMap<>();
+        payload.put(CommandPayloadType.PORT, port);
         callDispatch(Command.LISTEN, payload);
 
         if (!isBlocking) {
@@ -64,13 +65,13 @@ public class Server {
     private void acceptClientConnections() {
         boolean cancelationToken = true;
         while (cancelationToken) {
-            HashMap<String, Object> payload = new HashMap<>();
+            HashMap<CommandPayloadType, Object> payload = new HashMap<>();
             try {
                 Socket socket = serverListener.acceptSocketConnection();
-                payload.put("socket", socket);
+                payload.put(CommandPayloadType.SOCKET, socket);
             } catch (IOException e) {
-                HashMap<String, Object> errorPayload = new HashMap<>();
-                errorPayload.put("error", e.getMessage());
+                HashMap<CommandPayloadType, Object> errorPayload = new HashMap<>();
+                errorPayload.put(CommandPayloadType.ERROR, e.getMessage());
                 callDispatch(Command.ERROR, errorPayload);
             } finally {
                 callDispatch(Command.CONNECTION, payload);
@@ -78,7 +79,7 @@ public class Server {
         }
     }
 
-    private void callDispatch(Command commandType, HashMap<String, Object> payload) {
+    private void callDispatch(Command commandType, HashMap<CommandPayloadType, Object> payload) {
         if (isBlocking) {
             dispatcher.process(commandType, payload);
         } else {
@@ -96,8 +97,8 @@ public class Server {
         try {
             serverListener.bindAndListen(port);
         } catch (IOException e) {
-            HashMap<String, Object> errorPayload = new HashMap<>();
-            errorPayload.put("error", e.getMessage());
+            HashMap<CommandPayloadType, Object> errorPayload = new HashMap<>();
+            errorPayload.put(CommandPayloadType.ERROR, e.getMessage());
             callDispatch(Command.ERROR, errorPayload);
         }
     }
@@ -115,12 +116,12 @@ public class Server {
             IResponse response = router.handleRequest(clientRequest);
             sendResponse(response, socketConnection);
         } catch (InvalidRequestStringException e) {
-            HashMap<String, Object> errorPayload = new HashMap<>();
-            errorPayload.put("error", e.toString());
+            HashMap<CommandPayloadType, Object> errorPayload = new HashMap<>();
+            errorPayload.put(CommandPayloadType.ERROR, e.toString());
             callDispatch(Command.ERROR, errorPayload);
         } catch (IOException e) {
-            HashMap<String, Object> errorPayload = new HashMap<>();
-            errorPayload.put("error", e.toString());
+            HashMap<CommandPayloadType, Object> errorPayload = new HashMap<>();
+            errorPayload.put(CommandPayloadType.ERROR, e.toString());
             callDispatch(Command.ERROR, errorPayload);
         } finally {
             closeConnectionWithClient(socketConnection);
@@ -134,8 +135,8 @@ public class Server {
 
             socketConnection.writeToOutputStream(responseString);
         } catch (IOException e) {
-            HashMap<String, Object> errorPayload = new HashMap<>();
-            errorPayload.put("error", e.getMessage());
+            HashMap<CommandPayloadType, Object> errorPayload = new HashMap<>();
+            errorPayload.put(CommandPayloadType.ERROR, e.getMessage());
             callDispatch(Command.ERROR, errorPayload);
         }
     }
@@ -145,25 +146,23 @@ public class Server {
             socketConnection.closeSocketConnection();
             logClosingSocketInfo();
         } catch (IOException e) {
-            HashMap<String, Object> errorPayload = new HashMap<>();
-            errorPayload.put("error", e.getMessage());
+            HashMap<CommandPayloadType, Object> errorPayload = new HashMap<>();
+            errorPayload.put(CommandPayloadType.ERROR, e.getMessage());
             callDispatch(Command.ERROR, errorPayload);
         }
     }
 
     private void closeServerListener(ServerListener serverListener) {
         try {
-            // 10. Close ServerConnectionListener.
             serverListener.closeListener();
         } catch (IOException e) {
-            HashMap<String, Object> errorPayload = new HashMap<>();
-            errorPayload.put("error", e.getMessage());
+            HashMap<CommandPayloadType, Object> errorPayload = new HashMap<>();
+            errorPayload.put(CommandPayloadType.ERROR, e.getMessage());
             callDispatch(Command.ERROR, errorPayload);
         }
     }
 
     private String readInputData(SocketConnection socketConnection) throws IOException {
-        // 3. Read input data from com.github.chiangj8L.WebServer.SocketConnection.
         String clientRequestString = socketConnection.readFromInputStream();
         logRequest(clientRequestString);
         return clientRequestString;
@@ -179,34 +178,33 @@ public class Server {
         String dashes = "-----";
 
         System.out.println(dashes + " client connected on " + now.toString() + " " + dashes + "\n");
-        System.out.println(" **** START: Client com.github.chiangj8L.WebServer.Request **** ");
+        System.out.println(" **** START: Client Request **** ");
         System.out.println(request);
-        System.out.println(" === END: Client com.github.chiangj8L.WebServer.Request === \n");
+        System.out.println(" === END: Client Request === \n");
     }
 
     private void logResponse(String responseString) {
-        System.out.println(" **** START: com.github.chiangj8L.WebServer.Response **** ");
+        System.out.println(" **** START: Response **** ");
         System.out.println(responseString);
-        System.out.println(" === END: com.github.chiangj8L.WebServer.Response === \n");
+        System.out.println(" === END: Response === \n");
     }
 
     private void init() {
-        ICommandHandlerLambda errorHandler = (HashMap<String, Object> payload) -> {
-            this.handleError((String)payload.get("error"));
+        ICommandHandlerLambda errorHandler = (HashMap<CommandPayloadType, Object> payload) -> {
+            this.handleError((String)payload.get(CommandPayloadType.ERROR));
         };
 
-        ICommandHandlerLambda listenHandler = (HashMap<String, Object> payload) -> {
-            this.handleListen((int)payload.get("port"));
+        ICommandHandlerLambda listenHandler = (HashMap<CommandPayloadType, Object> payload) -> {
+            this.handleListen((int)payload.get(CommandPayloadType.PORT));
         };
 
-        ICommandHandlerLambda newConnectionHandler = (HashMap<String, Object> payload) -> {
-            this.handleConnection((Socket)payload.get("socket"));
+        ICommandHandlerLambda newConnectionHandler = (HashMap<CommandPayloadType, Object> payload) -> {
+            this.handleConnection((Socket)payload.get(CommandPayloadType.SOCKET));
         };
 
-        ICommandHandlerLambda closeServerHandler = (HashMap<String, Object> payload) -> {
+        ICommandHandlerLambda closeServerHandler = (HashMap<CommandPayloadType, Object> payload) -> {
             dispatcher.stopExecution();
             this.handleCloseServer();
-            // What is command for exit process();
         };
 
         dispatcher.registerCommandHandler(Command.LISTEN, listenHandler);

@@ -1,7 +1,8 @@
 package com.github.chiangj8L.WebServer.CommandDispatcher;
 
-import CommandHandler.ICommandHandlerLambda;
 import com.github.chiangj8L.WebServer.Command.Command;
+import com.github.chiangj8L.WebServer.CommandHandler.ICommandHandlerLambda;
+import com.github.chiangj8L.WebServer.CommandPayloadType.CommandPayloadType;
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class CommandDispatcher {
         }
     }
 
-    public void process(Command commandType, HashMap<String, Object> payload) {
+    public void process(Command commandType, HashMap<CommandPayloadType, Object> payload) {
         if (containsCommandType(commandType)) {
             ArrayList<ICommandHandlerLambda> commandHandlers = commands.get(commandType);
 
@@ -37,7 +38,7 @@ public class CommandDispatcher {
         }
     }
 
-    public void processWithExecutionService(Command commandType, HashMap<String, Object> payload) {
+    public void processWithExecutionService(Command commandType, HashMap<CommandPayloadType, Object> payload) {
         Runnable runnableTask = () -> {
             process(commandType, payload);
         };

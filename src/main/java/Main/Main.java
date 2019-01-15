@@ -1,16 +1,13 @@
 package Main;
 
-import CommandHandler.ICommandHandlerLambda;
-import com.github.chiangj8L.WebServer.Command.Command;
 import com.github.chiangj8L.WebServer.Request.IRequest;
 import com.github.chiangj8L.WebServer.Response.IResponse;
 import com.github.chiangj8L.WebServer.RouteController.IRouteController;
 import com.github.chiangj8L.WebServer.Router.Router;
 import com.github.chiangj8L.WebServer.Server.Server;
 
-import java.util.HashMap;
-
-import static com.github.chiangj8L.WebServer.HttpStatus.HttpStatus.*;
+import static com.github.chiangj8L.WebServer.HttpStatus.HttpStatus.MOVED_PERMANENTLY;
+import static com.github.chiangj8L.WebServer.HttpStatus.HttpStatus.OK;
 
 public class Main {
 
@@ -106,16 +103,16 @@ public class Main {
         int port = 5000;
         Server server = new Server(router, false, 12);
 
-        ICommandHandlerLambda showServerInfoHandler1 = (HashMap<String, Object> payload) -> {
-            System.out.println("*1* JAVA-HTTP-SERVER: Listening on port " + port);
-        };
-
-        ICommandHandlerLambda showServerInfoHandler2 = (HashMap<String, Object> payload) -> {
-            System.out.println("*2* JAVA-HTTP-SERVER: Completed connection processing.");
-        };
-
-        server.on(Command.LISTEN, showServerInfoHandler1);
-        server.on(Command.CONNECTION, showServerInfoHandler2);
+//        ICommandHandlerLambda showServerInfoHandler1 = (HashMap<String, Object> payload) -> {
+//            System.out.println("*1* JAVA-HTTP-SERVER: Listening on port " + port);
+//        };
+//
+//        ICommandHandlerLambda showServerInfoHandler2 = (HashMap<String, Object> payload) -> {
+//            System.out.println("*2* JAVA-HTTP-SERVER: Completed connection processing.");
+//        };
+//
+//        server.on(Command.LISTEN, showServerInfoHandler1);
+//        server.on(Command.CONNECTION, showServerInfoHandler2);
 
         server.listen(port);
     }

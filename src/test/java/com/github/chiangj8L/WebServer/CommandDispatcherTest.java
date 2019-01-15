@@ -1,8 +1,9 @@
 package com.github.chiangj8L.WebServer;
 
-import CommandHandler.ICommandHandlerLambda;
-import CommandDispatcher;
+import com.github.chiangj8L.WebServer.Command.Command;
+import com.github.chiangj8L.WebServer.CommandHandler.ICommandHandlerLambda;
 import com.github.chiangj8L.WebServer.CommandDispatcher.CommandDispatcher;
+import com.github.chiangj8L.WebServer.CommandPayloadType.CommandPayloadType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,28 +16,30 @@ import static org.junit.Assert.assertTrue;
 
 public class CommandDispatcherTest {
 
-    private String listenType = "listen";
-    private String errorType = "error";
-    private String connectionType = "connection";
+    private Command listenType = Command.LISTEN;
+    private Command errorType = Command.ERROR;
+    private Command connectionType = Command.CONNECTION;
+    private CommandPayloadType testPayloadType = CommandPayloadType.PORT;
+    private String testString = "test";
     private String listenString1 = "listenLambda1.operation";
     private String listenString2 = "listenLambda2.operation";
     private String errorString = "errorLambda.operation";
     private String connectionString = "connectionLambda.operation";
     private ArrayList<String> functionCalls = new ArrayList<>();
-    private ICommandHandlerLambda listenLambda = (HashMap<String, Object> payload) -> {
-        functionCalls.add(listenString1 + "(" + payload.get("test") + ")");
+    private ICommandHandlerLambda listenLambda = (HashMap<CommandPayloadType, Object> payload) -> {
+        functionCalls.add(listenString1 + "(" + payload.get(testPayloadType) + ")");
     };
 
-    private ICommandHandlerLambda listenLambda2 = (HashMap<String, Object> payload) -> {
-        functionCalls.add(listenString2 + "(" + payload.get("test") + ")");
+    private ICommandHandlerLambda listenLambda2 = (HashMap<CommandPayloadType, Object> payload) -> {
+        functionCalls.add(listenString2 + "(" + payload.get(testPayloadType) + ")");
     };
 
-    private ICommandHandlerLambda connectionLambda = (HashMap<String, Object> payload) -> {
-        functionCalls.add(connectionString + "(" + payload.get("test") + ")");
+    private ICommandHandlerLambda connectionLambda = (HashMap<CommandPayloadType, Object> payload) -> {
+        functionCalls.add(connectionString + "(" + payload.get(testPayloadType) + ")");
     };
 
-    private ICommandHandlerLambda errorLambda = (HashMap<String, Object> payload) -> {
-        functionCalls.add(errorString + "(" + payload.get("test") + ")");
+    private ICommandHandlerLambda errorLambda = (HashMap<CommandPayloadType, Object> payload) -> {
+        functionCalls.add(errorString + "(" + payload.get(testPayloadType) + ")");
     };
 
     @Before
@@ -108,7 +111,7 @@ public class CommandDispatcherTest {
     public final void testProcess() throws IllegalAccessException, NoSuchFieldException {
         CommandDispatcher dispatcher = new CommandDispatcher();
 
-        HashMap<String, ArrayList<ICommandHandlerLambda>> commands = new HashMap<>();
+        HashMap<Command, ArrayList<ICommandHandlerLambda>> commands = new HashMap<>();
 
         ArrayList<ICommandHandlerLambda> listenHandlers = new ArrayList<>();
         listenHandlers.add(listenLambda);
@@ -128,9 +131,8 @@ public class CommandDispatcherTest {
         field.setAccessible(true);
         field.set(dispatcher, commands);
 
-        String testString = "test";
-        HashMap<String, Object> testPayload = new HashMap<>();
-        testPayload.put(testString, testString);
+        HashMap<CommandPayloadType, Object> testPayload = new HashMap<>();
+        testPayload.put(testPayloadType, testString);
 
         dispatcher.process(listenType, testPayload);
         dispatcher.process(connectionType, testPayload);
